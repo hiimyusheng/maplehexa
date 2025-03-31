@@ -130,7 +130,7 @@ function go() {
     var com1_consume = parseInt($("#common1_consume").html());
     let havePieces = parseInt(document.getElementById("havePieces").value);
     havePieces = isNaN(havePieces) ? 0 : havePieces;
-    var alln1 = s_consume + jn1_consume + jn2_consume +stn1_consume + stn2_consume + stn3_consume + stn4_consume + com1_consume + havePieces;
+    var alln1 = s_consume + jn1_consume + jn2_consume + stn1_consume + stn2_consume + stn3_consume + stn4_consume + com1_consume + havePieces;
     document.getElementById("all").innerHTML = alln1;
     var s_request = parseInt($("#skill1_request").html());
     var jn1_request = parseInt($("#jinton1_request").html());
