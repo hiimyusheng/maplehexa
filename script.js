@@ -2,8 +2,6 @@ function go() {
     var skilv = document.getElementById('skill1_level').value;
     var jin1lv = document.getElementById('jinton1_level').value;
     var jin2lv = document.getElementById('jinton2_level').value;
-    var jin3lv = document.getElementById('jinton3_level').value;
-    var jin4lv = document.getElementById('jinton4_level').value;
     var str1lv = document.getElementById('strong1_level').value;
     var str2lv = document.getElementById('strong2_level').value;
     var str3lv = document.getElementById('strong3_level').value;
@@ -51,34 +49,6 @@ function go() {
     }
     document.getElementById("jinton2_consume").innerHTML = jinton2_consume;
     document.getElementById("jinton2_request").innerHTML = 2252 - jinton2_consume;
-
-    // 精通核心3
-    if (isNaN(jin3lv)) {
-        jin3lv = 0;
-    }
-    if (jin3lv >= 30) {
-        jin3lv = 30;
-    }
-    let jinton3_consume = 0;
-    for (let i = 0; i < jin3lv; i++) {
-        jinton3_consume+= jintonArray[i];
-    }
-    document.getElementById("jinton3_consume").innerHTML = jinton3_consume;
-    document.getElementById("jinton3_request").innerHTML = 2252 - jinton3_consume;
-
-    // 精通核心4
-    if (isNaN(jin4lv)) {
-        jin4lv = 0;
-    }
-    if (jin4lv >= 30) {
-        jin4lv = 30;
-    }
-    let jinton4_consume = 0;
-    for (let i = 0; i < jin4lv; i++) {
-        jinton4_consume+= jintonArray[i];
-    }
-    document.getElementById("jinton4_consume").innerHTML = jinton4_consume;
-    document.getElementById("jinton4_request").innerHTML = 2252 - jinton4_consume;
 
     // 強化核心1
     if (isNaN(str1lv)) {
@@ -153,8 +123,6 @@ function go() {
     var s_consume = parseInt($("#skill1_consume").html());
     var jn1_consume = parseInt($("#jinton1_consume").html());
     var jn2_consume = parseInt($("#jinton2_consume").html());
-    var jn3_consume = parseInt($("#jinton3_consume").html());
-    var jn4_consume = parseInt($("#jinton4_consume").html());
     var stn1_consume = parseInt($("#strong1_consume").html());
     var stn2_consume = parseInt($("#strong2_consume").html());
     var stn3_consume = parseInt($("#strong3_consume").html());
@@ -162,22 +130,20 @@ function go() {
     var com1_consume = parseInt($("#common1_consume").html());
     let havePieces = parseInt(document.getElementById("havePieces").value);
     havePieces = isNaN(havePieces) ? 0 : havePieces;
-    var alln1 = s_consume + jn1_consume + jn2_consume + jn3_consume + jn4_consume + stn1_consume + stn2_consume + stn3_consume + stn4_consume + com1_consume + havePieces;
+    var alln1 = s_consume + jn1_consume + jn2_consume + stn1_consume + stn2_consume + stn3_consume + stn4_consume + com1_consume + havePieces;
     document.getElementById("all").innerHTML = alln1;
     var s_request = parseInt($("#skill1_request").html());
     var jn1_request = parseInt($("#jinton1_request").html());
     var jn2_request = parseInt($("#jinton1_request").html());
-    var jn3_request = parseInt($("#jinton3_request").html());
-    var jn4_request = parseInt($("#jinton4_request").html());
     var stn1_request = parseInt($("#strong1_request").html());
     var stn2_request = parseInt($("#strong2_request").html());
     var stn3_request = parseInt($("#strong3_request").html());
     var stn4_request = parseInt($("#strong4_request").html());
     var com1_request = parseInt($("#common1_request").html());
-    var alln2 = s_request + jn1_request + jn2_request + jn3_request +jn4_request + stn1_request + stn2_request + stn3_request + stn4_request + com1_request - havePieces;
+    var alln2 = s_request + jn1_request + jn2_request + stn1_request + stn2_request + stn3_request + stn4_request + com1_request - havePieces;
     document.getElementById("all2").innerHTML = alln2;
     var x;
-        x=alln1/332.08;
+        x=alln1/287.04;
         document.getElementById("ooo1").innerHTML = x.toFixed(2)+"%";
     var vvv2 = document.getElementById("vvv");
     vvv2.setAttribute('value',alln1);
@@ -224,7 +190,7 @@ function go() {
     if (alln1 > 10000) {
         document.getElementById("no1").innerHTML = "說謊的孩子沒人要";
     }
-    if (alln1 == 33208) {
+    if (alln1 == 28704) {
         document.getElementById("no1").innerHTML = "誇大了吧臭宅。";
     }
     document.getElementById("no2").style.display = "inline-block";
