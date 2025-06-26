@@ -1,476 +1,1300 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>新楓之谷 星力模擬器</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body { font-family: 'Noto Sans TC', 'Roboto', 'Noto Sans KR', sans-serif; background-color: #111827; color: #e2e8f0; }
-        .card { background-color: #1f2937; border: 1px solid #374151; }
-        .input-field { background-color: #111827; border: 1px solid #4b5563; }
-        .btn-primary { background-color: #4f46e5; transition: background-color 0.2s; }
-        .btn-primary:hover:not(:disabled) { background-color: #6366f1; }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-        .result-card h3 { color: #fcd34d; }
-        .result-value { color: #f9fafb; font-weight: 700; }
-        .spinner { border: 4px solid rgba(255, 255, 255, 0.2); border-left-color: #6366f1; border-radius: 50%; width: 32px; height: 32px; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .checkbox-container { position: relative; display: flex; align-items: flex-start; }
-        .checkbox-input { position: absolute; opacity: 0; width: 0; height: 0; }
-        .checkbox-label { display: flex; align-items: center; background-color: #374151; border: 1px solid #4b5563; transition: all 0.2s; border-radius: 0.375rem; padding: 0.75rem; cursor: pointer; width: 100%; }
-        .checkbox-label:hover { background-color: #4b5563; }
-        .checkbox-custom-box { width: 1.25rem; height: 1.25rem; border: 2px solid #9ca3af; border-radius: 0.25rem; margin-right: 0.75rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-        .checkbox-custom-box .checkmark { display: none; color: white; font-weight: bold; }
-        .checkbox-input:checked + .checkbox-label { background-color: #4338ca; border-color: #6366f1; }
-        .checkbox-input:checked + .checkbox-label .checkbox-custom-box { background-color: #6366f1; border-color: #818cf8; }
-        .checkbox-input:checked + .checkbox-label .checkbox-custom-box .checkmark { display: block; }
-        .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); }
-        .modal-content { background-color: #1f2937; margin: 5% auto; padding: 2rem; border: 1px solid #374151; width: 95%; max-width: 1000px; border-radius: 0.5rem; }
+      body {
+        font-family: "Noto Sans TC", "Roboto", "Noto Sans KR", sans-serif;
+        background-color: #111827;
+        color: #e2e8f0;
+      }
+      .card {
+        background-color: #1f2937;
+        border: 1px solid #374151;
+      }
+      .input-field {
+        background-color: #111827;
+        border: 1px solid #4b5563;
+      }
+      .btn-primary {
+        background-color: #4f46e5;
+        transition: background-color 0.2s;
+      }
+      .btn-primary:hover:not(:disabled) {
+        background-color: #6366f1;
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .result-card h3 {
+        color: #fcd34d;
+      }
+      .result-value {
+        color: #f9fafb;
+        font-weight: 700;
+      }
+      .spinner {
+        border: 4px solid rgba(255, 255, 255, 0.2);
+        border-left-color: #6366f1;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .checkbox-container {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+      }
+      .checkbox-input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        background-color: #374151;
+        border: 1px solid #4b5563;
+        transition: all 0.2s;
+        border-radius: 0.375rem;
+        padding: 0.75rem;
+        cursor: pointer;
+        width: 100%;
+      }
+      .checkbox-label:hover {
+        background-color: #4b5563;
+      }
+      .checkbox-custom-box {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid #9ca3af;
+        border-radius: 0.25rem;
+        margin-right: 0.75rem;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .checkbox-custom-box .checkmark {
+        display: none;
+        color: white;
+        font-weight: bold;
+      }
+      .checkbox-input:checked + .checkbox-label {
+        background-color: #4338ca;
+        border-color: #6366f1;
+      }
+      .checkbox-input:checked + .checkbox-label .checkbox-custom-box {
+        background-color: #6366f1;
+        border-color: #818cf8;
+      }
+      .checkbox-input:checked
+        + .checkbox-label
+        .checkbox-custom-box
+        .checkmark {
+        display: block;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 50;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+      .modal-content {
+        background-color: #1f2937;
+        margin: 5% auto;
+        padding: 2rem;
+        border: 1px solid #374151;
+        width: 95%;
+        max-width: 1000px;
+        border-radius: 0.5rem;
+      }
     </style>
-</head>
-<body class="p-4 md:p-8">
+  </head>
+  <body class="p-4 md:p-8">
     <div class="max-w-6xl mx-auto">
-        <header class="text-center mb-8 relative">
-            <h1 class="text-4xl font-bold text-yellow-300" data-i18n-key="title">新楓之谷 星力模擬器</h1>
-            <p class="text-gray-400 mt-2" data-i18n-key="subtitle">精準計算您的強化成本與風險</p>
-            <div class="absolute top-0 right-0 flex items-center gap-2">
-                 <select id="language-switcher" class="input-field rounded-md p-2 text-sm">
-                    <option value="zh-Hant">繁體中文</option>
-                    <option value="en">English</option>
-                    <option value="ko">한국어</option>
-                </select>
-                <button id="open-settings-btn" class="btn-primary text-white font-bold p-3 rounded-full text-lg leading-none" data-i18n-key="settings" title="自訂設定">⚙️</button>
-            </div>
-        </header>
-
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
-            <!-- Left Panel: Controls -->
-            <div class="lg:col-span-2 card p-6 rounded-lg">
-                <h2 class="text-2xl font-bold mb-6 border-b border-gray-600 pb-3 text-white" data-i18n-key="sim_settings_title">模擬設定</h2>
-                <div class="space-y-4">
-                    <div>
-                        <label for="profile-select" class="block text-sm font-medium text-gray-300" data-i18n-key="profile_select_label">選擇裝備設定</label>
-                        <select id="profile-select" class="input-field mt-1 block w-full rounded-md shadow-sm p-2"></select>
-                    </div>
-                    <div>
-                        <label for="start-level" class="block text-sm font-medium text-gray-300" data-i18n-key="start_level_label">起始星力</label>
-                        <input type="number" id="start-level" value="0" min="0" class="input-field mt-1 block w-full rounded-md shadow-sm p-2">
-                    </div>
-                    <div>
-                        <label for="target-level" class="block text-sm font-medium text-gray-300" data-i18n-key="target_level_label">目標星力</label>
-                        <input type="number" id="target-level" value="22" min="1" class="input-field mt-1 block w-full rounded-md shadow-sm p-2">
-                    </div>
-                    <div>
-                        <label for="item-count" class="block text-sm font-medium text-gray-300" data-i18n-key="item_count_label">目標件數</label>
-                        <input type="number" id="item-count" value="100" min="1" max="5000" class="input-field mt-1 block w-full rounded-md shadow-sm p-2">
-                    </div>
-                </div>
-
-                 <div class="mt-6">
-                    <h3 class="text-lg font-medium text-gray-300 mb-2" data-i18n-key="permanent_features_title">常駐功能</h3>
-                    <div class="space-y-2">
-                        <div class="checkbox-container">
-                            <input id="safeguard-check" type="checkbox" class="checkbox-input">
-                            <label for="safeguard-check" class="checkbox-label">
-                                <div class="checkbox-custom-box"><span class="checkmark">✓</span></div>
-                                <div class="text-sm">
-                                    <span class="font-medium text-white" data-i18n-key="safeguard_title">防爆 (15-17星)</span>
-                                    <p class="text-gray-400" data-i18n-key="safeguard_desc">啟用後，該次總費用變為 3 倍。</p>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-6">
-                    <h3 class="text-lg font-medium text-gray-300 mb-2" data-i18n-key="events_title">強化活動 (可複選)</h3>
-                    <div class="space-y-2">
-                        <div class="checkbox-container">
-                             <input id="event-30off" type="checkbox" class="checkbox-input">
-                            <label for="event-30off" class="checkbox-label">
-                                <div class="checkbox-custom-box"><span class="checkmark">✓</span></div>
-                                <span class="font-medium text-white" data-i18n-key="event_30off_title">強化費用 -30%</span>
-                            </label>
-                        </div>
-                         <div class="checkbox-container">
-                             <input id="event-5-10-15" type="checkbox" class="checkbox-input">
-                            <label for="event-5-10-15" class="checkbox-label">
-                                <div class="checkbox-custom-box"><span class="checkmark">✓</span></div>
-                                <span class="font-medium text-white" data-i18n-key="event_51015_title">5/10/15 星 100% 成功</span>
-                            </label>
-                        </div>
-                        <div class="checkbox-container">
-                             <input id="event-destroy-protect" type="checkbox" class="checkbox-input">
-                            <label for="event-destroy-protect" class="checkbox-label">
-                                <div class="checkbox-custom-box"><span class="checkmark">✓</span></div>
-                                <div class="text-sm">
-                                    <span class="font-medium text-white" data-i18n-key="event_destroy_protect_title">破壞機率 -30% (15-21星)</span>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-8">
-                    <button id="start-simulation" class="btn-primary w-full text-white font-bold py-3 px-4 rounded-lg text-lg" data-i18n-key="start_button">開始模擬</button>
-                </div>
-            </div>
-
-            <!-- Right Panel: Results -->
-            <div class="lg:col-span-3">
-                 <div id="loader" class="hidden card p-6 rounded-lg flex-col items-center justify-center min-h-[300px]">
-                    <div class="spinner"></div>
-                    <p class="mt-4 text-lg text-gray-300" data-i18n-key="loader_text">正在進行大量模擬... 請稍候</p>
-                </div>
-                <div id="results-container" class="hidden">
-                    <div class="card p-6 rounded-lg mb-6">
-                         <h2 class="text-2xl font-bold mb-4 text-white" data-i18n-key="results_title">總體結果</h2>
-                         <p class="text-gray-300"><span data-i18n-key="results_desc_1">成功製作</span> <span id="result-item-count" class="font-bold text-yellow-400"></span> <span data-i18n-key="results_desc_2">件</span> <span id="result-target-level" class="font-bold text-yellow-400"></span> <span data-i18n-key="results_desc_3">星裝備的統計數據</span></p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="result-card card p-6 rounded-lg">
-                            <h3 class="text-xl font-bold mb-4" data-i18n-key="meso_stats_title">楓幣花費統計</h3>
-                            <ul class="space-y-3 text-gray-300">
-                                <li class="flex justify-between"><span data-i18n-key="stats_avg">平均:</span> <span id="meso-avg" class="result-value"></span></li>
-                                <li class="flex justify-between"><span data-i18n-key="stats_median">中位數:</span> <span id="meso-median" class="result-value"></span></li>
-                                <li class="flex justify-between"><span data-i18n-key="stats_stdev">標準差:</span> <span id="meso-stdev" class="result-value"></span></li>
-                                <li class="flex justify-between"><span data-i18n-key="stats_min">最小值:</span> <span id="meso-min" class="result-value"></span></li>
-                                <li class="flex justify-between"><span data-i18n-key="stats_max">最大值:</span> <span id="meso-max" class="result-value"></span></li>
-                                <hr class="my-3 border-gray-600">
-                                <li class="text-lg font-bold text-yellow-300" data-i18n-key="meso_percentiles_title">費用百分位數</li>
-                                <li class="flex justify-between"><span>75% <span data-i18n-key="chance">機率</span>:</span> <span id="meso-p75" class="result-value"></span></li>
-                                <li class="flex justify-between"><span>85% <span data-i18n-key="chance">機率</span>:</span> <span id="meso-p85" class="result-value"></span></li>
-                                <li class="flex justify-between"><span>95% <span data-i18n-key="chance">機率</span>:</span> <span id="meso-p95" class="result-value"></span></li>
-                            </ul>
-                        </div>
-                        <div class="result-card card p-6 rounded-lg">
-                            <h3 class="text-xl font-bold mb-4" data-i18n-key="boom_stats_title">裝備破壞統計</h3>
-                             <ul class="space-y-3 text-gray-300">
-                                <li class="flex justify-between"><span data-i18n-key="stats_avg">平均:</span> <span id="boom-avg" class="result-value"></span></li>
-                                <li class="flex justify-between"><span data-i18n-key="stats_median">中位數:</span> <span id="boom-median" class="result-value"></span></li>
-                                <li class="flex justify-between"><span data-i18n-key="stats_stdev">標準差:</span> <span id="boom-stdev" class="result-value"></span></li>
-                                <li class="flex justify-between"><span data-i18n-key="stats_min">最小值:</span> <span id="boom-min" class="result-value"></span></li>
-                                <li class="flex justify-between"><span data-i18n-key="stats_max">最大值:</span> <span id="boom-max" class="result-value"></span></li>
-                                <hr class="my-3 border-gray-600">
-                                <li class="text-lg font-bold text-yellow-300" data-i18n-key="boom_percentiles_title">破壞百分位數</li>
-                                <li class="flex justify-between"><span>75% <span data-i18n-key="chance">機率</span>:</span> <span id="boom-p75" class="result-value"></span></li>
-                                <li class="flex justify-between"><span>85% <span data-i18n-key="chance">機率</span>:</span> <span id="boom-p85" class="result-value"></span></li>
-                                <li class="flex justify-between"><span>95% <span data-i18n-key="chance">機率</span>:</span> <span id="boom-p95" class="result-value"></span></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card p-6 rounded-lg mt-6">
-                        <h3 class="text-xl font-bold mb-4" data-i18n-key="boom_chart_title">破壞次數分佈圖</h3>
-                        <canvas id="boomChart"></canvas>
-                    </div>
-                </div>
-            </div>
+      <header class="text-center mb-8 relative">
+        <h1 class="text-4xl font-bold text-yellow-300" data-i18n-key="title">
+          新楓之谷 星力模擬器
+        </h1>
+        <p class="text-gray-400 mt-2" data-i18n-key="subtitle">
+          精準計算您的強化成本與風險
+        </p>
+        <div class="absolute top-0 right-0 flex items-center gap-2">
+          <select
+            id="language-switcher"
+            class="input-field rounded-md p-2 text-sm"
+          >
+            <option value="zh-Hant">繁體中文</option>
+            <option value="en">English</option>
+            <option value="ko">한국어</option>
+          </select>
+          <button
+            id="open-settings-btn"
+            class="btn-primary text-white font-bold p-3 rounded-full text-lg leading-none"
+            data-i18n-key="settings"
+            title="自訂設定"
+          >
+            ⚙️
+          </button>
         </div>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <!-- Left Panel: Controls -->
+        <div class="lg:col-span-2 card p-6 rounded-lg">
+          <h2
+            class="text-2xl font-bold mb-6 border-b border-gray-600 pb-3 text-white"
+            data-i18n-key="sim_settings_title"
+          >
+            模擬設定
+          </h2>
+          <div class="space-y-4">
+            <div>
+              <label
+                for="profile-select"
+                class="block text-sm font-medium text-gray-300"
+                data-i18n-key="profile_select_label"
+                >選擇裝備設定</label
+              >
+              <select
+                id="profile-select"
+                class="input-field mt-1 block w-full rounded-md shadow-sm p-2"
+              ></select>
+            </div>
+            <div>
+              <label
+                for="start-level"
+                class="block text-sm font-medium text-gray-300"
+                data-i18n-key="start_level_label"
+                >起始星力</label
+              >
+              <input
+                type="number"
+                id="start-level"
+                value="0"
+                min="0"
+                class="input-field mt-1 block w-full rounded-md shadow-sm p-2"
+              />
+            </div>
+            <div>
+              <label
+                for="target-level"
+                class="block text-sm font-medium text-gray-300"
+                data-i18n-key="target_level_label"
+                >目標星力</label
+              >
+              <input
+                type="number"
+                id="target-level"
+                value="22"
+                min="1"
+                class="input-field mt-1 block w-full rounded-md shadow-sm p-2"
+              />
+            </div>
+            <div>
+              <label
+                for="item-count"
+                class="block text-sm font-medium text-gray-300"
+                data-i18n-key="item_count_label"
+                >目標件數</label
+              >
+              <input
+                type="number"
+                id="item-count"
+                value="100"
+                min="1"
+                max="5000"
+                class="input-field mt-1 block w-full rounded-md shadow-sm p-2"
+              />
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <h3
+              class="text-lg font-medium text-gray-300 mb-2"
+              data-i18n-key="permanent_features_title"
+            >
+              常駐功能
+            </h3>
+            <div class="space-y-2">
+              <div class="checkbox-container">
+                <input
+                  id="safeguard-check"
+                  type="checkbox"
+                  class="checkbox-input"
+                />
+                <label for="safeguard-check" class="checkbox-label">
+                  <div class="checkbox-custom-box">
+                    <span class="checkmark">✓</span>
+                  </div>
+                  <div class="text-sm">
+                    <span
+                      class="font-medium text-white"
+                      data-i18n-key="safeguard_title"
+                      >防爆 (15-17星)</span
+                    >
+                    <p class="text-gray-400" data-i18n-key="safeguard_desc">
+                      啟用後，該次總費用變為 3 倍。
+                    </p>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <h3
+              class="text-lg font-medium text-gray-300 mb-2"
+              data-i18n-key="events_title"
+            >
+              強化活動 (可複選)
+            </h3>
+            <div class="space-y-2">
+              <div class="checkbox-container">
+                <input
+                  id="event-30off"
+                  type="checkbox"
+                  class="checkbox-input"
+                />
+                <label for="event-30off" class="checkbox-label">
+                  <div class="checkbox-custom-box">
+                    <span class="checkmark">✓</span>
+                  </div>
+                  <span
+                    class="font-medium text-white"
+                    data-i18n-key="event_30off_title"
+                    >強化費用 -30%</span
+                  >
+                </label>
+              </div>
+              <div class="checkbox-container">
+                <input
+                  id="event-5-10-15"
+                  type="checkbox"
+                  class="checkbox-input"
+                />
+                <label for="event-5-10-15" class="checkbox-label">
+                  <div class="checkbox-custom-box">
+                    <span class="checkmark">✓</span>
+                  </div>
+                  <span
+                    class="font-medium text-white"
+                    data-i18n-key="event_51015_title"
+                    >5/10/15 星 100% 成功</span
+                  >
+                </label>
+              </div>
+              <div class="checkbox-container">
+                <input
+                  id="event-destroy-protect"
+                  type="checkbox"
+                  class="checkbox-input"
+                />
+                <label for="event-destroy-protect" class="checkbox-label">
+                  <div class="checkbox-custom-box">
+                    <span class="checkmark">✓</span>
+                  </div>
+                  <div class="text-sm">
+                    <span
+                      class="font-medium text-white"
+                      data-i18n-key="event_destroy_protect_title"
+                      >破壞機率 -30% (15-21星)</span
+                    >
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8">
+            <button
+              id="start-simulation"
+              class="btn-primary w-full text-white font-bold py-3 px-4 rounded-lg text-lg"
+              data-i18n-key="start_button"
+            >
+              開始模擬
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Panel: Results -->
+        <div class="lg:col-span-3">
+          <div
+            id="loader"
+            class="hidden card p-6 rounded-lg flex-col items-center justify-center min-h-[300px]"
+          >
+            <div class="spinner"></div>
+            <p class="mt-4 text-lg text-gray-300" data-i18n-key="loader_text">
+              正在進行大量模擬... 請稍候
+            </p>
+          </div>
+          <div id="results-container" class="hidden">
+            <div class="card p-6 rounded-lg mb-6">
+              <h2
+                class="text-2xl font-bold mb-4 text-white"
+                data-i18n-key="results_title"
+              >
+                總體結果
+              </h2>
+              <p class="text-gray-300">
+                <span data-i18n-key="results_desc_1">成功製作</span>
+                <span
+                  id="result-item-count"
+                  class="font-bold text-yellow-400"
+                ></span>
+                <span data-i18n-key="results_desc_2">件</span>
+                <span
+                  id="result-target-level"
+                  class="font-bold text-yellow-400"
+                ></span>
+                <span data-i18n-key="results_desc_3">星裝備的統計數據</span>
+              </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="result-card card p-6 rounded-lg">
+                <h3
+                  class="text-xl font-bold mb-4"
+                  data-i18n-key="meso_stats_title"
+                >
+                  楓幣花費統計
+                </h3>
+                <ul class="space-y-3 text-gray-300">
+                  <li class="flex justify-between">
+                    <span data-i18n-key="stats_avg">平均:</span>
+                    <span id="meso-avg" class="result-value"></span>
+                  </li>
+                  <li class="flex justify-between">
+                    <span data-i18n-key="stats_median">中位數:</span>
+                    <span id="meso-median" class="result-value"></span>
+                  </li>
+                  <li class="flex justify-between">
+                    <span data-i18n-key="stats_stdev">標準差:</span>
+                    <span id="meso-stdev" class="result-value"></span>
+                  </li>
+                  <li class="flex justify-between">
+                    <span data-i18n-key="stats_min">最小值:</span>
+                    <span id="meso-min" class="result-value"></span>
+                  </li>
+                  <li class="flex justify-between">
+                    <span data-i18n-key="stats_max">最大值:</span>
+                    <span id="meso-max" class="result-value"></span>
+                  </li>
+                  <hr class="my-3 border-gray-600" />
+                  <li
+                    class="text-lg font-bold text-yellow-300"
+                    data-i18n-key="meso_percentiles_title"
+                  >
+                    費用百分位數
+                  </li>
+                  <li class="flex justify-between">
+                    <span>75% <span data-i18n-key="chance">機率</span>:</span>
+                    <span id="meso-p75" class="result-value"></span>
+                  </li>
+                  <li class="flex justify-between">
+                    <span>85% <span data-i18n-key="chance">機率</span>:</span>
+                    <span id="meso-p85" class="result-value"></span>
+                  </li>
+                  <li class="flex justify-between">
+                    <span>95% <span data-i18n-key="chance">機率</span>:</span>
+                    <span id="meso-p95" class="result-value"></span>
+                  </li>
+                </ul>
+              </div>
+              <div class="result-card card p-6 rounded-lg">
+                <h3
+                  class="text-xl font-bold mb-4"
+                  data-i18n-key="boom_stats_title"
+                >
+                  裝備破壞統計
+                </h3>
+                <ul class="space-y-3 text-gray-300">
+                  <li class="flex justify-between">
+                    <span data-i18n-key="stats_avg">平均:</span>
+                    <span id="boom-avg" class="result-value"></span>
+                  </li>
+                  <li class="flex justify-between">
+                    <span data-i18n-key="stats_median">中位數:</span>
+                    <span id="boom-median" class="result-value"></span>
+                  </li>
+                  <li class="flex justify-between">
+                    <span data-i18n-key="stats_stdev">標準差:</span>
+                    <span id="boom-stdev" class="result-value"></span>
+                  </li>
+                  <li class="flex justify-between">
+                    <span data-i18n-key="stats_min">最小值:</span>
+                    <span id="boom-min" class="result-value"></span>
+                  </li>
+                  <li class="flex justify-between">
+                    <span data-i18n-key="stats_max">最大值:</span>
+                    <span id="boom-max" class="result-value"></span>
+                  </li>
+                  <hr class="my-3 border-gray-600" />
+                  <li
+                    class="text-lg font-bold text-yellow-300"
+                    data-i18n-key="boom_percentiles_title"
+                  >
+                    破壞百分位數
+                  </li>
+                  <li class="flex justify-between">
+                    <span>75% <span data-i18n-key="chance">機率</span>:</span>
+                    <span id="boom-p75" class="result-value"></span>
+                  </li>
+                  <li class="flex justify-between">
+                    <span>85% <span data-i18n-key="chance">機率</span>:</span>
+                    <span id="boom-p85" class="result-value"></span>
+                  </li>
+                  <li class="flex justify-between">
+                    <span>95% <span data-i18n-key="chance">機率</span>:</span>
+                    <span id="boom-p95" class="result-value"></span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="card p-6 rounded-lg mt-6">
+              <h3
+                class="text-xl font-bold mb-4"
+                data-i18n-key="boom_chart_title"
+              >
+                破壞次數分佈圖
+              </h3>
+              <canvas id="boomChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    
+
     <!-- Settings Modal -->
     <div id="settings-modal" class="modal">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-6">
-                 <h2 class="text-3xl font-bold text-yellow-300" data-i18n-key="settings_modal_title">自訂強化設定</h2>
-                 <button id="close-settings-btn" class="text-gray-400 text-3xl hover:text-white">&times;</button>
-            </div>
-            
-            <div class="flex gap-4 mb-6 items-end">
-                <div class="flex-grow">
-                    <label for="settings-profile-select" class="block text-sm font-medium text-gray-300" data-i18n-key="profile_select_label">選擇設定檔</label>
-                    <select id="settings-profile-select" class="input-field mt-1 block w-full rounded-md shadow-sm p-2"></select>
-                </div>
-                <button id="add-profile-btn" class="btn-primary px-4 py-2 rounded-md" data-i18n-key="add_button">新增</button>
-                <button id="delete-profile-btn" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md" data-i18n-key="delete_button">刪除</button>
-            </div>
-
-            <div class="h-[60vh] overflow-y-auto pr-4">
-                <table class="w-full text-sm text-left text-gray-400">
-                    <thead class="text-xs text-gray-300 uppercase bg-gray-700">
-                        <tr>
-                            <th class="px-4 py-2" data-i18n-key="table_star">星力</th>
-                            <th class="px-4 py-2" data-i18n-key="table_success">成功 (%)</th>
-                            <th class="px-4 py-2" data-i18n-key="table_maintain">維持 (%)</th>
-                            <th class="px-4 py-2" data-i18n-key="table_downgrade">下降 (%)</th>
-                            <th class="px-4 py-2" data-i18n-key="table_destroy">破壞 (%)</th>
-                            <th class="px-4 py-2" data-i18n-key="table_cost">費用</th>
-                        </tr>
-                    </thead>
-                    <tbody id="settings-table-body">
-                        <!-- Rows will be generated by JS -->
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="mt-6 text-right">
-                <button id="save-settings-btn" class="btn-primary text-white font-bold py-2 px-6 rounded-lg text-lg" data-i18n-key="save_button">儲存設定</button>
-            </div>
+      <div class="modal-content">
+        <div class="flex justify-between items-center mb-6">
+          <h2
+            class="text-3xl font-bold text-yellow-300"
+            data-i18n-key="settings_modal_title"
+          >
+            自訂強化設定
+          </h2>
+          <button
+            id="close-settings-btn"
+            class="text-gray-400 text-3xl hover:text-white"
+          >
+            &times;
+          </button>
         </div>
+
+        <div class="flex gap-4 mb-6 items-end">
+          <div class="flex-grow">
+            <label
+              for="settings-profile-select"
+              class="block text-sm font-medium text-gray-300"
+              data-i18n-key="profile_select_label"
+              >選擇設定檔</label
+            >
+            <select
+              id="settings-profile-select"
+              class="input-field mt-1 block w-full rounded-md shadow-sm p-2"
+            ></select>
+          </div>
+          <button
+            id="add-profile-btn"
+            class="btn-primary px-4 py-2 rounded-md"
+            data-i18n-key="add_button"
+          >
+            新增
+          </button>
+          <button
+            id="delete-profile-btn"
+            class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md"
+            data-i18n-key="delete_button"
+          >
+            刪除
+          </button>
+        </div>
+
+        <div class="h-[60vh] overflow-y-auto pr-4">
+          <table class="w-full text-sm text-left text-gray-400">
+            <thead class="text-xs text-gray-300 uppercase bg-gray-700">
+              <tr>
+                <th class="px-4 py-2" data-i18n-key="table_star">星力</th>
+                <th class="px-4 py-2" data-i18n-key="table_success">
+                  成功 (%)
+                </th>
+                <th class="px-4 py-2" data-i18n-key="table_maintain">
+                  維持 (%)
+                </th>
+                <th class="px-4 py-2" data-i18n-key="table_downgrade">
+                  下降 (%)
+                </th>
+                <th class="px-4 py-2" data-i18n-key="table_destroy">
+                  破壞 (%)
+                </th>
+                <th class="px-4 py-2" data-i18n-key="table_cost">費用</th>
+              </tr>
+            </thead>
+            <tbody id="settings-table-body">
+              <!-- Rows will be generated by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-6 text-right">
+          <button
+            id="save-settings-btn"
+            class="btn-primary text-white font-bold py-2 px-6 rounded-lg text-lg"
+            data-i18n-key="save_button"
+          >
+            儲存設定
+          </button>
+        </div>
+      </div>
     </div>
 
-
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const dom = {
-                startLevel: document.getElementById('start-level'), targetLevel: document.getElementById('target-level'),
-                itemCount: document.getElementById('item-count'), safeguardCheck: document.getElementById('safeguard-check'),
-                event30off: document.getElementById('event-30off'), event51015: document.getElementById('event-5-10-15'),
-                eventDestroyProtect: document.getElementById('event-destroy-protect'), startButton: document.getElementById('start-simulation'),
-                loader: document.getElementById('loader'), resultsContainer: document.getElementById('results-container'),
-                boomChartCanvas: document.getElementById('boomChart'), resultItemCount: document.getElementById('result-item-count'),
-                resultTargetLevel: document.getElementById('result-target-level'), mesoAvg: document.getElementById('meso-avg'),
-                mesoMedian: document.getElementById('meso-median'), mesoStdev: document.getElementById('meso-stdev'),
-                mesoMin: document.getElementById('meso-min'), mesoMax: document.getElementById('meso-max'),
-                mesoP75: document.getElementById('meso-p75'), mesoP85: document.getElementById('meso-p85'), mesoP95: document.getElementById('meso-p95'),
-                boomAvg: document.getElementById('boom-avg'), boomMedian: document.getElementById('boom-median'),
-                boomStdev: document.getElementById('boom-stdev'), boomMin: document.getElementById('boom-min'),
-                boomMax: document.getElementById('boom-max'),
-                boomP75: document.getElementById('boom-p75'), boomP85: document.getElementById('boom-p85'), boomP95: document.getElementById('boom-p95'),
-                openSettingsBtn: document.getElementById('open-settings-btn'), closeSettingsBtn: document.getElementById('close-settings-btn'),
-                settingsModal: document.getElementById('settings-modal'), settingsProfileSelect: document.getElementById('settings-profile-select'),
-                addProfileBtn: document.getElementById('add-profile-btn'), deleteProfileBtn: document.getElementById('delete-profile-btn'),
-                settingsTableBody: document.getElementById('settings-table-body'), saveSettingsBtn: document.getElementById('save-settings-btn'),
-                mainProfileSelect: document.getElementById('profile-select'),
-                languageSwitcher: document.getElementById('language-switcher')
+      document.addEventListener("DOMContentLoaded", () => {
+        const dom = {
+          startLevel: document.getElementById("start-level"),
+          targetLevel: document.getElementById("target-level"),
+          itemCount: document.getElementById("item-count"),
+          safeguardCheck: document.getElementById("safeguard-check"),
+          event30off: document.getElementById("event-30off"),
+          event51015: document.getElementById("event-5-10-15"),
+          eventDestroyProtect: document.getElementById("event-destroy-protect"),
+          startButton: document.getElementById("start-simulation"),
+          loader: document.getElementById("loader"),
+          resultsContainer: document.getElementById("results-container"),
+          boomChartCanvas: document.getElementById("boomChart"),
+          resultItemCount: document.getElementById("result-item-count"),
+          resultTargetLevel: document.getElementById("result-target-level"),
+          mesoAvg: document.getElementById("meso-avg"),
+          mesoMedian: document.getElementById("meso-median"),
+          mesoStdev: document.getElementById("meso-stdev"),
+          mesoMin: document.getElementById("meso-min"),
+          mesoMax: document.getElementById("meso-max"),
+          mesoP75: document.getElementById("meso-p75"),
+          mesoP85: document.getElementById("meso-p85"),
+          mesoP95: document.getElementById("meso-p95"),
+          boomAvg: document.getElementById("boom-avg"),
+          boomMedian: document.getElementById("boom-median"),
+          boomStdev: document.getElementById("boom-stdev"),
+          boomMin: document.getElementById("boom-min"),
+          boomMax: document.getElementById("boom-max"),
+          boomP75: document.getElementById("boom-p75"),
+          boomP85: document.getElementById("boom-p85"),
+          boomP95: document.getElementById("boom-p95"),
+          openSettingsBtn: document.getElementById("open-settings-btn"),
+          closeSettingsBtn: document.getElementById("close-settings-btn"),
+          settingsModal: document.getElementById("settings-modal"),
+          settingsProfileSelect: document.getElementById(
+            "settings-profile-select"
+          ),
+          addProfileBtn: document.getElementById("add-profile-btn"),
+          deleteProfileBtn: document.getElementById("delete-profile-btn"),
+          settingsTableBody: document.getElementById("settings-table-body"),
+          saveSettingsBtn: document.getElementById("save-settings-btn"),
+          mainProfileSelect: document.getElementById("profile-select"),
+          languageSwitcher: document.getElementById("language-switcher"),
+        };
+
+        let boomChartInstance = null;
+        let starForceProfiles = {};
+        let currentProfileName = "";
+
+        const defaultProbabilities = [
+          { success: 95, maintain: 5, downgrade: 0, destroy: 0 },
+          { success: 90, maintain: 10, downgrade: 0, destroy: 0 },
+          { success: 85, maintain: 15, downgrade: 0, destroy: 0 },
+          { success: 85, maintain: 15, downgrade: 0, destroy: 0 },
+          { success: 80, maintain: 20, downgrade: 0, destroy: 0 },
+          { success: 75, maintain: 25, downgrade: 0, destroy: 0 },
+          { success: 70, maintain: 30, downgrade: 0, destroy: 0 },
+          { success: 65, maintain: 35, downgrade: 0, destroy: 0 },
+          { success: 60, maintain: 40, downgrade: 0, destroy: 0 },
+          { success: 55, maintain: 45, downgrade: 0, destroy: 0 },
+          { success: 50, maintain: 50, downgrade: 0, destroy: 0 },
+          { success: 45, maintain: 55, downgrade: 0, destroy: 0 },
+          { success: 40, maintain: 60, downgrade: 0, destroy: 0 },
+          { success: 35, maintain: 65, downgrade: 0, destroy: 0 },
+          { success: 30, maintain: 70, downgrade: 0, destroy: 0 },
+          { success: 30, maintain: 67.9, downgrade: 0, destroy: 2.1 },
+          { success: 30, maintain: 67.9, downgrade: 0, destroy: 2.1 },
+          { success: 15, maintain: 78.2, downgrade: 0, destroy: 6.8 },
+          { success: 12, maintain: 79.8, downgrade: 0, destroy: 8.2 },
+          { success: 10, maintain: 81, downgrade: 0, destroy: 9 },
+          { success: 30, maintain: 59.5, downgrade: 0, destroy: 10.5 },
+          { success: 20, maintain: 68.5, downgrade: 0, destroy: 11.5 },
+          { success: 17.5, maintain: 70.25, downgrade: 0, destroy: 12.25 },
+          { success: 8.5, maintain: 73.5, downgrade: 0, destroy: 18 },
+          { success: 8.5, maintain: 73.5, downgrade: 0, destroy: 18 },
+          { success: 8, maintain: 74, downgrade: 0, destroy: 18 },
+          { success: 7, maintain: 74.4, downgrade: 0, destroy: 18.6 },
+          { success: 5, maintain: 76, downgrade: 0, destroy: 19 },
+          { success: 3, maintain: 77.6, downgrade: 0, destroy: 19.4 },
+          { success: 1, maintain: 79.2, downgrade: 0, destroy: 19.8 },
+        ];
+        const costs = {
+          "Abyssal/Gollux (150)": [
+            94800, 188500, 282300, 376000, 469800, 563500, 657300, 751000,
+            844800, 938500, 3832800, 8814200, 16052200, 26726100, 47243900,
+            48139000, 59062500, 75183500, 212666000, 366382500, 62696400,
+            113738800, 80152000, 89912300, 100389000, 111603000, 123574700,
+            136324400, 149872300, 164238100,
+          ],
+          "Sweetwater (160)": [
+            114800, 228600, 342300, 456100, 569900, 683700, 797400, 911200,
+            1025000, 1138800, 4651300, 10697000, 19481200, 32435400, 57336400,
+            58422700, 71679800, 91244700, 258097500, 444652400, 76090000,
+            138036600, 97274600, 109120000, 121834900, 135444400, 149973700,
+            165447100, 181889200, 199324000,
+          ],
+          "Arcane Shade (200)": [
+            223200, 445400, 667700, 889900, 1112100, 1334300, 1556600, 1778800,
+            2001000, 2223200, 9083700, 20891500, 38048200, 63349500, 111984100,
+            114105800, 139998700, 178211400, 504095800, 868460800, 148612400,
+            269601800, 189988600, 213124000, 237957700, 264539000, 292916400,
+            323138000, 355251400, 389303700,
+          ],
+          "Eternal (250)": [
+            435000, 869100, 1303100, 1737100, 2171100, 2605200, 3039200,
+            3473200, 3907300, 4341300, 17740600, 40802800, 74312000, 123728500,
+            218718100, 222861900, 273434000, 348068200, 984561100, 1696211500,
+            387009800, 438804400, 494760300, 555008800, 619680000, 688902000,
+            762801400, 841503600, 925132300, 1013810000,
+          ],
+        };
+
+        function generateDefaultProfiles() {
+          const profiles = {};
+          for (const key in costs) {
+            profiles[key] = defaultProbabilities.map((prob, i) => ({
+              ...prob,
+              cost: costs[key][i] || 0,
+            }));
+          }
+          return profiles;
+        }
+        const defaultStarForceData = generateDefaultProfiles();
+
+        const translations = {
+          "zh-Hant": {
+            title: "新楓之谷 星力模擬器",
+            subtitle: "精準計算您的強化成本與風險",
+            settings: "自訂設定",
+            sim_settings_title: "模擬設定",
+            profile_select_label: "選擇裝備設定",
+            start_level_label: "起始星力",
+            target_level_label: "目標星力",
+            item_count_label: "目標件數",
+            permanent_features_title: "常駐功能",
+            safeguard_title: "防爆 (15-17星)",
+            safeguard_desc: "啟用後，該次總費用變為 3 倍。",
+            events_title: "強化活動 (可複選)",
+            event_30off_title: "強化費用 -30%",
+            event_51015_title: "5/10/15 星 100% 成功",
+            event_destroy_protect_title: "破壞機率 -30% (15-21星)",
+            start_button: "開始模擬",
+            loader_text: "正在進行大量模擬... 請稍候",
+            results_title: "總體結果",
+            results_desc_1: "成功製作",
+            results_desc_2: "件",
+            results_desc_3: "星裝備的統計數據",
+            meso_stats_title: "楓幣花費統計",
+            stats_avg: "平均:",
+            stats_median: "中位數:",
+            stats_stdev: "標準差:",
+            stats_min: "最小值:",
+            stats_max: "最大值:",
+            meso_percentiles_title: "費用百分位數",
+            boom_stats_title: "裝備破壞統計",
+            boom_percentiles_title: "破壞百分位數",
+            chance: "機率",
+            boom_chart_title: "破壞次數分佈圖",
+            boom_chart_dataset_label: "模擬次數",
+            boom_chart_tooltip_title: "破壞次數",
+            boom_chart_y_axis: "模擬次數 (Frequency)",
+            boom_chart_x_axis: "裝備破壞數量 (Boom Amount)",
+            settings_modal_title: "自訂強化設定",
+            add_button: "新增",
+            delete_button: "刪除",
+            table_star: "星力",
+            table_success: "成功 (%)",
+            table_maintain: "維持 (%)",
+            table_downgrade: "下降 (%)",
+            table_destroy: "破壞 (%)",
+            table_cost: "費用",
+            save_button: "儲存設定",
+            profile_names: {
+              "Abyssal/Gollux (150)": "深淵/頂培 (150級)",
+              "Sweetwater (160)": "航海師 (160級)",
+              "Arcane Shade (200)": "神秘冥界 (200級)",
+              "Eternal (250)": "永恆 (250級)",
+            },
+            alert_target_level: "目標星力必須大於起始星力。",
+            alert_max_level: "目標星力超過目前設定檔的上限。",
+            prompt_new_profile: "請輸入新的設定檔名稱:",
+            alert_name_exists: "該名稱已存在！",
+            alert_keep_one_profile: "必須保留至少一個設定檔！",
+            confirm_delete: (name) => `確定要刪除設定檔 "${name}" 嗎？`,
+            alert_saved: (name) => `設定檔 "${name}" 已儲存！`,
+            p_chance_within: (val) => `在 ${val} 內`,
+            p_chance_within_booms: (val) => `在 ${val} 次破壞內`,
+          },
+          en: {
+            title: "MapleStory Star Force Simulator",
+            subtitle: "Calculate your enhancement costs and risks accurately",
+            settings: "Custom Settings",
+            sim_settings_title: "Simulation Settings",
+            profile_select_label: "Select Equipment Profile",
+            start_level_label: "Start Star",
+            target_level_label: "Target Star",
+            item_count_label: "Item Count",
+            permanent_features_title: "Permanent Features",
+            safeguard_title: "Safeguard (15-17 Star)",
+            safeguard_desc:
+              "When enabled, total cost for the attempt becomes 3x.",
+            events_title: "Enhancement Events (Multi-select)",
+            event_30off_title: "30% Off Star Force Cost",
+            event_51015_title: "5/10/15 Star 100% Success",
+            event_destroy_protect_title:
+              "30% Lower Destruction Rate (15-21 Star)",
+            start_button: "Start Simulation",
+            loader_text: "Running massive simulations... Please wait",
+            results_title: "Overall Results",
+            results_desc_1: "Statistics for successfully creating",
+            results_desc_2: "pieces of",
+            results_desc_3: "-star equipment",
+            meso_stats_title: "Meso Cost Statistics",
+            stats_avg: "Average:",
+            stats_median: "Median:",
+            stats_stdev: "Stdev:",
+            stats_min: "Min:",
+            stats_max: "Max:",
+            meso_percentiles_title: "Meso Percentiles",
+            boom_stats_title: "Boom-tistics",
+            boom_percentiles_title: "Boom Percentiles",
+            chance: "chance",
+            boom_chart_title: "Boom Count Frequency Histogram",
+            boom_chart_dataset_label: "Simulations",
+            boom_chart_tooltip_title: "Booms",
+            boom_chart_y_axis: "Simulations (Frequency)",
+            boom_chart_x_axis: "Amount of Booms",
+            settings_modal_title: "Custom Enhancement Settings",
+            add_button: "Add",
+            delete_button: "Delete",
+            table_star: "Star",
+            table_success: "Success (%)",
+            table_maintain: "Maintain (%)",
+            table_downgrade: "Downgrade (%)",
+            table_destroy: "Destroy (%)",
+            table_cost: "Cost",
+            save_button: "Save Settings",
+            profile_names: {
+              "Abyssal/Gollux (150)": "Abyssal/Gollux (150)",
+              "Sweetwater (160)": "Sweetwater (160)",
+              "Arcane Shade (200)": "Arcane Shade (200)",
+              "Eternal (250)": "Eternal (250)",
+            },
+            alert_target_level: "Target star must be greater than start star.",
+            alert_max_level:
+              "Target star exceeds the maximum for the current profile.",
+            prompt_new_profile: "Enter new profile name:",
+            alert_name_exists: "This name already exists!",
+            alert_keep_one_profile: "You must keep at least one profile!",
+            confirm_delete: (name) =>
+              `Are you sure you want to delete profile "${name}"?`,
+            alert_saved: (name) => `Profile "${name}" has been saved!`,
+            p_chance_within: (val) => `within ${val}`,
+            p_chance_within_booms: (val) => `within ${val} booms`,
+          },
+          ko: {
+            title: "메이플스토리 스타포스 시뮬레이터",
+            subtitle: "강화 비용과 리스크를 정확하게 계산하세요",
+            settings: "커스텀 설정",
+            sim_settings_title: "시뮬레이션 설정",
+            profile_select_label: "장비 프리셋 선택",
+            start_level_label: "시작 스타포스",
+            target_level_label: "목표 스타포스",
+            item_count_label: "목표 수량",
+            permanent_features_title: "상시 기능",
+            safeguard_title: "파괴 방지 (15-17성)",
+            safeguard_desc: "사용 시, 해당 강화 총비용이 3배가 됩니다.",
+            events_title: "강화 이벤트 (중복 선택 가능)",
+            event_30off_title: "강화 비용 -30%",
+            event_51015_title: "5/10/15성 100% 성공",
+            event_destroy_protect_title: "파괴 확률 -30% (15-21성)",
+            start_button: "시뮬레이션 시작",
+            loader_text: "대량 시뮬레이션 진행 중... 잠시만 기다려 주세요",
+            results_title: "종합 결과",
+            results_desc_1: "",
+            results_desc_2: "개의 ",
+            results_desc_3: "성 장비 제작 성공 통계",
+            meso_stats_title: "메소 비용 통계",
+            stats_avg: "평균:",
+            stats_median: "중앙값:",
+            stats_stdev: "표준편차:",
+            stats_min: "최소값:",
+            stats_max: "최대값:",
+            meso_percentiles_title: "비용 백분위수",
+            boom_stats_title: "장비 파괴 통계",
+            boom_percentiles_title: "파괴 백분위수",
+            chance: "확률",
+            boom_chart_title: "파괴 횟수 분포도",
+            boom_chart_dataset_label: "시뮬레이션 횟수",
+            boom_chart_tooltip_title: "파괴 횟수",
+            boom_chart_y_axis: "시뮬레이션 횟수 (Frequency)",
+            boom_chart_x_axis: "장비 파괴 횟수 (Boom Amount)",
+            settings_modal_title: "커스텀 강화 설정",
+            add_button: "추가",
+            delete_button: "삭제",
+            table_star: "스타포스",
+            table_success: "성공 (%)",
+            table_maintain: "유지 (%)",
+            table_downgrade: "하락 (%)",
+            table_destroy: "파괴 (%)",
+            table_cost: "비용",
+            save_button: "설정 저장",
+            profile_names: {
+              "Abyssal/Gollux (150)": "앱솔랩스/골럭스 (150제)",
+              "Sweetwater (160)": "앱솔랩스 (160제)",
+              "Arcane Shade (200)": "아케인셰이드 (200제)",
+              "Eternal (250)": "에테르넬 (250제)",
+            },
+            alert_target_level:
+              "목표 스타포스는 시작 스타포스보다 높아야 합니다.",
+            alert_max_level:
+              "목표 스타포스가 현재 프리셋의 최대치보다 높습니다.",
+            prompt_new_profile: "새 프리셋 이름을 입력하세요:",
+            alert_name_exists: "이미 존재하는 이름입니다!",
+            alert_keep_one_profile: "최소 한 개의 프리셋은 남겨둬야 합니다!",
+            confirm_delete: (name) => `"${name}" 프리셋을 삭제하시겠습니까?`,
+            alert_saved: (name) => `"${name}" 프리셋이 저장되었습니다!`,
+            p_chance_within: (val) => `${val} 이내`,
+            p_chance_within_booms: (val) => `${val}회 파괴 이내`,
+          },
+        };
+
+        let currentLang = "zh-Hant";
+
+        function setLanguage(lang) {
+          currentLang = lang;
+          document.documentElement.lang = lang;
+          localStorage.setItem("starforce-lang", lang);
+          const translationData = translations[lang];
+          document.querySelectorAll("[data-i18n-key]").forEach((el) => {
+            const key = el.dataset.i18nKey;
+            if (translationData[key]) el.textContent = translationData[key];
+          });
+          dom.openSettingsBtn.title = t("settings");
+          updateProfileSelectors(currentProfileName);
+        }
+
+        function t(key, ...args) {
+          const translation = translations[currentLang][key];
+          return typeof translation === "function"
+            ? translation(...args)
+            : translation || key;
+        }
+
+        function formatMeso(num) {
+          return Math.round(num).toLocaleString("en-US");
+        }
+
+        function calculateStats(data) {
+          const n = data.length;
+          if (n === 0)
+            return {
+              mean: 0,
+              median: 0,
+              stdev: 0,
+              min: 0,
+              max: 0,
+              p75: 0,
+              p85: 0,
+              p95: 0,
             };
+          const sum = data.reduce((a, b) => a + b, 0);
+          const mean = sum / n;
+          data.sort((a, b) => a - b);
+          const mid = Math.floor(n / 2);
+          const median =
+            n % 2 !== 0 ? data[mid] : (data[mid - 1] + data[mid]) / 2;
+          const variance = data.reduce((a, b) => a + (b - mean) ** 2, 0) / n;
+          const stdev = Math.sqrt(variance);
+          return {
+            mean,
+            median,
+            stdev,
+            min: data[0],
+            max: data[n - 1],
+            p75: data[Math.floor(n * 0.75)],
+            p85: data[Math.floor(n * 0.85)],
+            p95: data[Math.floor(n * 0.95)],
+          };
+        }
 
-            let boomChartInstance = null; let starForceProfiles = {}; let currentProfileName = '';
-            
-            const defaultProbabilities = [ 
-                { success: 95, maintain: 5, downgrade: 0, destroy: 0 }, 
-                { success: 90, maintain: 10, downgrade: 0, destroy: 0 }, 
-                { success: 85, maintain: 15, downgrade: 0, destroy: 0 }, 
-                { success: 85, maintain: 15, downgrade: 0, destroy: 0 }, 
-                { success: 80, maintain: 20, downgrade: 0, destroy: 0 }, 
-                { success: 75, maintain: 25, downgrade: 0, destroy: 0 }, 
-                { success: 70, maintain: 30, downgrade: 0, destroy: 0 }, 
-                { success: 65, maintain: 35, downgrade: 0, destroy: 0 }, 
-                { success: 60, maintain: 40, downgrade: 0, destroy: 0 }, 
-                { success: 55, maintain: 45, downgrade: 0, destroy: 0 }, 
-                { success: 50, maintain: 50, downgrade: 0, destroy: 0 }, 
-                { success: 45, maintain: 55, downgrade: 0, destroy: 0 }, 
-                { success: 40, maintain: 60, downgrade: 0, destroy: 0 }, 
-                { success: 35, maintain: 65, downgrade: 0, destroy: 0 }, 
-                { success: 30, maintain: 70, downgrade: 0, destroy: 0 }, 
-                { success: 30, maintain: 67.9, downgrade: 0, destroy: 2.1 }, 
-                { success: 30, maintain: 67.9, downgrade: 0, destroy: 2.1 }, 
-                { success: 15, maintain: 78.2, downgrade: 0, destroy: 6.8 }, 
-                { success: 12, maintain: 79.8, downgrade: 0, destroy: 8.2 }, 
-                { success: 10, maintain: 81, downgrade: 0, destroy: 9 }, 
-                { success: 30, maintain: 59.5, downgrade: 0, destroy: 10.5 }, 
-                { success: 20, maintain: 68.5, downgrade: 0, destroy: 11.5 }, 
-                { success: 17.5, maintain: 70.25, downgrade: 0, destroy: 12.25 }, 
-                { success: 8.5, maintain: 73.5, downgrade: 0, destroy: 18 }, 
-                { success: 8.5, maintain: 73.5, downgrade: 0, destroy: 18 }, 
-                { success: 8, maintain: 74, downgrade: 0, destroy: 18 }, 
-                { success: 7, maintain: 74.4, downgrade: 0, destroy: 18.6 }, 
-                { success: 5, maintain: 76, downgrade: 0, destroy: 19 }, 
-                { success: 3, maintain: 77.6, downgrade: 0, destroy: 19.4 }, 
-                { success: 1, maintain: 79.2, downgrade: 0, destroy: 19.8 } ];
-            const costs = {
-                "Abyssal/Gollux (150)": [ 94800, 188500, 282300, 376000, 469800, 563500, 657300, 751000, 844800, 938500, 3832800, 8814200, 16052200, 26726100, 47243900, 48139000, 59062500, 75183500, 212666000, 366382500, 62696400, 113738800, 80152000, 89912300, 100389000, 111603000, 123574700, 136324400, 149872300, 164238100 ],
-                "Sweetwater (160)": [ 114800, 228600, 342300, 456100, 569900, 683700, 797400, 911200, 1025000, 1138800, 4651300, 10697000, 19481200, 32435400, 57336400, 58422700, 71679800, 91244700, 258097500, 444652400, 76090000, 138036600, 97274600, 109120000, 121834900, 135444400, 149973700, 165447100, 181889200, 199324000 ],
-                "Arcane Shade (200)": [ 223200, 445400, 667700, 889900, 1112100, 1334300, 1556600, 1778800, 2001000, 2223200, 9083700, 20891500, 38048200, 63349500, 111984100, 114105800, 139998700, 178211400, 504095800, 868460800, 148612400, 269601800, 189988600, 213124000, 237957700, 264539000, 292916400, 323138000, 355251400, 389303700 ],
-                "Eternal (250)": [ 435000, 869100, 1303100, 1737100, 2171100, 2605200, 3039200, 3473200, 3907300, 4341300, 17740600, 40802800, 74312000, 123728500, 218718100, 222861900, 273434000, 348068200, 984561100, 1696211500, 387009800, 438804400, 494760300, 555008800, 619680000, 688902000, 762801400, 841503600, 925132300, 1013810000 ],
-            };
-            
-            function generateDefaultProfiles() {
-                const profiles = {};
-                for (const key in costs) {
-                    profiles[key] = defaultProbabilities.map((prob, i) => ({ ...prob, cost: costs[key][i] || 0 }));
-                }
-                return profiles;
+        function simulateOneItem(
+          startStars,
+          targetStars,
+          options,
+          starForceData
+        ) {
+          let currentStars = startStars;
+          let totalCost = 0,
+            totalBooms = 0,
+            attempts = 0;
+          const MAX_ATTEMPTS = 500000;
+          while (currentStars < targetStars && attempts < MAX_ATTEMPTS) {
+            attempts++;
+            let prob = { ...starForceData[currentStars] };
+            let cost = prob.cost;
+            if (options.is30off) cost *= 0.7;
+            if (options.is5_10_15 && [5, 10, 15].includes(currentStars)) {
+              totalCost += cost;
+              currentStars++;
+              continue;
             }
-            const defaultStarForceData = generateDefaultProfiles();
-            
-            const translations = { "zh-Hant": { title: "新楓之谷 星力模擬器", subtitle: "精準計算您的強化成本與風險", settings: "自訂設定", sim_settings_title: "模擬設定", profile_select_label: "選擇裝備設定", start_level_label: "起始星力", target_level_label: "目標星力", item_count_label: "目標件數", permanent_features_title: "常駐功能", safeguard_title: "防爆 (15-17星)", safeguard_desc: "啟用後，該次總費用變為 3 倍。", events_title: "強化活動 (可複選)", event_30off_title: "強化費用 -30%", event_51015_title: "5/10/15 星 100% 成功", event_destroy_protect_title: "破壞機率 -30% (15-21星)", start_button: "開始模擬", loader_text: "正在進行大量模擬... 請稍候", results_title: "總體結果", results_desc_1: "成功製作", results_desc_2: "件", results_desc_3: "星裝備的統計數據", meso_stats_title: "楓幣花費統計", stats_avg: "平均:", stats_median: "中位數:", stats_stdev: "標準差:", stats_min: "最小值:", stats_max: "最大值:", meso_percentiles_title: "費用百分位數", boom_stats_title: "裝備破壞統計", boom_percentiles_title: "破壞百分位數", chance: "機率", boom_chart_title: "破壞次數分佈圖", boom_chart_dataset_label: "模擬次數", boom_chart_tooltip_title: "破壞次數", boom_chart_y_axis: "模擬次數 (Frequency)", boom_chart_x_axis: "裝備破壞數量 (Boom Amount)", settings_modal_title: "自訂強化設定", add_button: "新增", delete_button: "刪除", table_star: "星力", table_success: "成功 (%)", table_maintain: "維持 (%)", table_downgrade: "下降 (%)", table_destroy: "破壞 (%)", table_cost: "費用", save_button: "儲存設定", profile_names: { "Abyssal/Gollux (150)": "深淵/頂培 (150級)", "Sweetwater (160)": "航海師 (160級)", "Arcane Shade (200)": "神秘冥界 (200級)", "Eternal (250)": "永恆 (250級)" }, alert_target_level: "目標星力必須大於起始星力。", alert_max_level: "目標星力超過目前設定檔的上限。", prompt_new_profile: "請輸入新的設定檔名稱:", alert_name_exists: "該名稱已存在！", alert_keep_one_profile: "必須保留至少一個設定檔！", confirm_delete: (name) => `確定要刪除設定檔 "${name}" 嗎？`, alert_saved: (name) => `設定檔 "${name}" 已儲存！`, p_chance_within: (val) => `在 ${val} 內`, p_chance_within_booms: (val) => `在 ${val} 次破壞內` }, "en": { title: "MapleStory Star Force Simulator", subtitle: "Calculate your enhancement costs and risks accurately", settings: "Custom Settings", sim_settings_title: "Simulation Settings", profile_select_label: "Select Equipment Profile", start_level_label: "Start Star", target_level_label: "Target Star", item_count_label: "Item Count", permanent_features_title: "Permanent Features", safeguard_title: "Safeguard (15-17 Star)", safeguard_desc: "When enabled, total cost for the attempt becomes 3x.", events_title: "Enhancement Events (Multi-select)", event_30off_title: "30% Off Star Force Cost", event_51015_title: "5/10/15 Star 100% Success", event_destroy_protect_title: "30% Lower Destruction Rate (15-21 Star)", start_button: "Start Simulation", loader_text: "Running massive simulations... Please wait", results_title: "Overall Results", results_desc_1: "Statistics for successfully creating", results_desc_2: "pieces of", results_desc_3: "-star equipment", meso_stats_title: "Meso Cost Statistics", stats_avg: "Average:", stats_median: "Median:", stats_stdev: "Stdev:", stats_min: "Min:", stats_max: "Max:", meso_percentiles_title: "Meso Percentiles", boom_stats_title: "Boom-tistics", boom_percentiles_title: "Boom Percentiles", chance: "chance", boom_chart_title: "Boom Count Frequency Histogram", boom_chart_dataset_label: "Simulations", boom_chart_tooltip_title: "Booms", boom_chart_y_axis: "Simulations (Frequency)", boom_chart_x_axis: "Amount of Booms", settings_modal_title: "Custom Enhancement Settings", add_button: "Add", delete_button: "Delete", table_star: "Star", table_success: "Success (%)", table_maintain: "Maintain (%)", table_downgrade: "Downgrade (%)", table_destroy: "Destroy (%)", table_cost: "Cost", save_button: "Save Settings", profile_names: { "Abyssal/Gollux (150)": "Abyssal/Gollux (150)", "Sweetwater (160)": "Sweetwater (160)", "Arcane Shade (200)": "Arcane Shade (200)", "Eternal (250)": "Eternal (250)" }, alert_target_level: "Target star must be greater than start star.", alert_max_level: "Target star exceeds the maximum for the current profile.", prompt_new_profile: "Enter new profile name:", alert_name_exists: "This name already exists!", alert_keep_one_profile: "You must keep at least one profile!", confirm_delete: (name) => `Are you sure you want to delete profile "${name}"?`, alert_saved: (name) => `Profile "${name}" has been saved!`, p_chance_within: (val) => `within ${val}`, p_chance_within_booms: (val) => `within ${val} booms` }, "ko": { title: "메이플스토리 스타포스 시뮬레이터", subtitle: "강화 비용과 리스크를 정확하게 계산하세요", settings: "커스텀 설정", sim_settings_title: "시뮬레이션 설정", profile_select_label: "장비 프리셋 선택", start_level_label: "시작 스타포스", target_level_label: "목표 스타포스", item_count_label: "목표 수량", permanent_features_title: "상시 기능", safeguard_title: "파괴 방지 (15-17성)", safeguard_desc: "사용 시, 해당 강화 총비용이 3배가 됩니다.", events_title: "강화 이벤트 (중복 선택 가능)", event_30off_title: "강화 비용 -30%", event_51015_title: "5/10/15성 100% 성공", event_destroy_protect_title: "파괴 확률 -30% (15-21성)", start_button: "시뮬레이션 시작", loader_text: "대량 시뮬레이션 진행 중... 잠시만 기다려 주세요", results_title: "종합 결과", results_desc_1: "", results_desc_2: "개의 ", results_desc_3: "성 장비 제작 성공 통계", meso_stats_title: "메소 비용 통계", stats_avg: "평균:", stats_median: "중앙값:", stats_stdev: "표준편차:", stats_min: "최소값:", stats_max: "최대값:", meso_percentiles_title: "비용 백분위수", boom_stats_title: "장비 파괴 통계", boom_percentiles_title: "파괴 백분위수", chance: "확률", boom_chart_title: "파괴 횟수 분포도", boom_chart_dataset_label: "시뮬레이션 횟수", boom_chart_tooltip_title: "파괴 횟수", boom_chart_y_axis: "시뮬레이션 횟수 (Frequency)", boom_chart_x_axis: "장비 파괴 횟수 (Boom Amount)", settings_modal_title: "커스텀 강화 설정", add_button: "추가", delete_button: "삭제", table_star: "스타포스", table_success: "성공 (%)", table_maintain: "유지 (%)", table_downgrade: "하락 (%)", table_destroy: "파괴 (%)", table_cost: "비용", save_button: "설정 저장", profile_names: { "Abyssal/Gollux (150)": "앱솔랩스/골럭스 (150제)", "Sweetwater (160)": "앱솔랩스 (160제)", "Arcane Shade (200)": "아케인셰이드 (200제)", "Eternal (250)": "에테르넬 (250제)" }, alert_target_level: "목표 스타포스는 시작 스타포스보다 높아야 합니다.", alert_max_level: "목표 스타포스가 현재 프리셋의 최대치보다 높습니다.", prompt_new_profile: "새 프리셋 이름을 입력하세요:", alert_name_exists: "이미 존재하는 이름입니다!", alert_keep_one_profile: "최소 한 개의 프리셋은 남겨둬야 합니다!", confirm_delete: (name) => `"${name}" 프리셋을 삭제하시겠습니까?`, alert_saved: (name) => `"${name}" 프리셋이 저장되었습니다!`, p_chance_within: (val) => `${val} 이내`, p_chance_within_booms: (val) => `${val}회 파괴 이내` } };
-            
-            let currentLang = 'zh-Hant';
+            if (
+              options.isDestroyProtect &&
+              currentStars >= 15 &&
+              currentStars <= 21
+            ) {
+              const reduction = prob.destroy * 0.3;
+              prob.destroy -= reduction;
+              prob.maintain += reduction;
+            }
+            const useSafeguard =
+              options.useSafeguard && [15, 16, 17].includes(currentStars);
+            if (useSafeguard) {
+              prob.maintain += prob.destroy;
+              prob.destroy = 0;
+              cost *= 3;
+            }
+            totalCost += cost;
+            const rand = Math.random() * 100;
+            if (rand < prob.success) currentStars++;
+            else if (rand < prob.success + prob.destroy) {
+              totalBooms++;
+              // 所有炸裝都回到12星
+              currentStars = 12;
+            } else if (rand < prob.success + prob.downgrade)
+              currentStars = Math.max(0, currentStars - 1);
+          }
+          return attempts >= MAX_ATTEMPTS
+            ? null
+            : { cost: totalCost, booms: totalBooms };
+        }
 
-            function setLanguage(lang) {
-                currentLang = lang;
-                document.documentElement.lang = lang;
-                localStorage.setItem('starforce-lang', lang);
-                const translationData = translations[lang];
-                document.querySelectorAll('[data-i18n-key]').forEach(el => {
-                    const key = el.dataset.i18nKey;
-                    if (translationData[key]) el.textContent = translationData[key];
-                });
-                 dom.openSettingsBtn.title = t('settings');
-                updateProfileSelectors(currentProfileName);
-            }
-            
-            function t(key, ...args) {
-                const translation = translations[currentLang][key];
-                return typeof translation === 'function' ? translation(...args) : translation || key;
-            }
+        function renderBoomChart(boomData) {
+          if (boomChartInstance) boomChartInstance.destroy();
+          const boomCounts = {};
+          boomData.forEach((boom) => {
+            boomCounts[boom] = (boomCounts[boom] || 0) + 1;
+          });
+          const labels = Object.keys(boomCounts).sort((a, b) => a - b);
+          const data = labels.map((label) => boomCounts[label]);
+          const ctx = dom.boomChartCanvas.getContext("2d");
+          boomChartInstance = new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: t("boom_chart_dataset_label"),
+                  data,
+                  backgroundColor: "rgba(79, 70, 229, 0.6)",
+                  borderColor: "rgba(99, 102, 241, 1)",
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  backgroundColor: "#1f2937",
+                  callbacks: {
+                    title: (ctx) =>
+                      `${t("boom_chart_tooltip_title")}: ${ctx[0].label}`,
+                  },
+                },
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  grid: { color: "rgba(255,255,255,0.1)" },
+                  ticks: { color: "#d1d5db" },
+                  title: {
+                    display: true,
+                    text: t("boom_chart_y_axis"),
+                    color: "#d1d5db",
+                  },
+                },
+                x: {
+                  grid: { color: "rgba(255,255,255,0.05)" },
+                  ticks: { color: "#d1d5db" },
+                  title: {
+                    display: true,
+                    text: t("boom_chart_x_axis"),
+                    color: "#d1d5db",
+                  },
+                },
+              },
+            },
+          });
+        }
 
-            function formatMeso(num) { return Math.round(num).toLocaleString('en-US'); }
-            
-            function calculateStats(data) {
-                const n = data.length; if (n === 0) return { mean: 0, median: 0, stdev: 0, min: 0, max: 0, p75: 0, p85: 0, p95: 0 };
-                const sum = data.reduce((a, b) => a + b, 0); const mean = sum / n;
-                data.sort((a, b) => a - b); const mid = Math.floor(n / 2);
-                const median = n % 2 !== 0 ? data[mid] : (data[mid - 1] + data[mid]) / 2;
-                const variance = data.reduce((a, b) => a + (b - mean) ** 2, 0) / n;
-                const stdev = Math.sqrt(variance);
-                return { mean, median, stdev, min: data[0], max: data[n - 1], p75: data[Math.floor(n * 0.75)], p85: data[Math.floor(n * 0.85)], p95: data[Math.floor(n * 0.95)] };
-            }
+        function startSimulation() {
+          const startLevel = parseInt(dom.startLevel.value);
+          const targetLevel = parseInt(dom.targetLevel.value);
+          const itemCount = parseInt(dom.itemCount.value);
+          const currentData = starForceProfiles[currentProfileName];
+          const options = {
+            useSafeguard: dom.safeguardCheck.checked,
+            is30off: dom.event30off.checked,
+            is5_10_15: dom.event51015.checked,
+            isDestroyProtect: dom.eventDestroyProtect.checked,
+          };
+          if (startLevel >= targetLevel) {
+            alert(t("alert_target_level"));
+            return;
+          }
+          if (!currentData || targetLevel > currentData.length) {
+            alert(t("alert_max_level"));
+            return;
+          }
 
-            function simulateOneItem(startStars, targetStars, options, starForceData) {
-                let currentStars = startStars; let totalCost = 0, totalBooms = 0, attempts = 0;
-                const MAX_ATTEMPTS = 500000;
-                while (currentStars < targetStars && attempts < MAX_ATTEMPTS) {
-                    attempts++; let prob = { ...starForceData[currentStars] }; let cost = prob.cost;
-                    if (options.is30off) cost *= 0.7;
-                    if (options.is5_10_15 && [5, 10, 15].includes(currentStars)) { totalCost += cost; currentStars++; continue; }
-                    if (options.isDestroyProtect && currentStars >= 15 && currentStars <= 21) { const reduction = prob.destroy * 0.30; prob.destroy -= reduction; prob.maintain += reduction; }
-                    const useSafeguard = options.useSafeguard && [15, 16, 17].includes(currentStars);
-                    if (useSafeguard) { prob.maintain += prob.destroy; prob.destroy = 0; cost *= 3; }
-                    totalCost += cost; const rand = Math.random() * 100;
-                    if (rand < prob.success) currentStars++;
-                    else if (rand < prob.success + prob.destroy) { 
-                        totalBooms++; 
-                        // 所有炸裝都回到12星
-                        currentStars = 12; 
-                    }
-                    else if (rand < prob.success + prob.downgrade) currentStars = Math.max(0, currentStars - 1);
-                }
-                return attempts >= MAX_ATTEMPTS ? null : { cost: totalCost, booms: totalBooms };
-            }
-            
-            function renderBoomChart(boomData) {
-                if (boomChartInstance) boomChartInstance.destroy();
-                const boomCounts = {}; boomData.forEach(boom => { boomCounts[boom] = (boomCounts[boom] || 0) + 1; });
-                const labels = Object.keys(boomCounts).sort((a,b) => a-b); const data = labels.map(label => boomCounts[label]);
-                const ctx = dom.boomChartCanvas.getContext('2d');
-                boomChartInstance = new Chart(ctx, { type: 'bar', data: { labels, datasets: [{ label: t('boom_chart_dataset_label'), data, backgroundColor: 'rgba(79, 70, 229, 0.6)', borderColor: 'rgba(99, 102, 241, 1)', borderWidth: 1 }] }, options: { responsive: true, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1f2937', callbacks: { title: (ctx) => `${t('boom_chart_tooltip_title')}: ${ctx[0].label}` } } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#d1d5db' }, title: { display: true, text: t('boom_chart_y_axis'), color: '#d1d5db'} }, x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#d1d5db' }, title: { display: true, text: t('boom_chart_x_axis'), color: '#d1d5db'} } } } });
-            }
+          dom.loader.classList.remove("hidden");
+          dom.resultsContainer.classList.add("hidden");
+          dom.startButton.disabled = true;
 
-            function startSimulation() {
-                const startLevel = parseInt(dom.startLevel.value); const targetLevel = parseInt(dom.targetLevel.value);
-                const itemCount = parseInt(dom.itemCount.value); const currentData = starForceProfiles[currentProfileName];
-                const options = { useSafeguard: dom.safeguardCheck.checked, is30off: dom.event30off.checked, is5_10_15: dom.event51015.checked, isDestroyProtect: dom.eventDestroyProtect.checked };
-                if (startLevel >= targetLevel) { alert(t('alert_target_level')); return; }
-                if (!currentData || targetLevel > currentData.length) { alert(t('alert_max_level')); return; }
+          setTimeout(() => {
+            const mesoResults = [],
+              boomResults = [];
+            for (let i = 0; i < itemCount; i++) {
+              const result = simulateOneItem(
+                startLevel,
+                targetLevel,
+                options,
+                currentData
+              );
+              if (result) {
+                mesoResults.push(result.cost);
+                boomResults.push(result.booms);
+              }
+            }
+            const mesoStats = calculateStats(mesoResults);
+            const boomStats = calculateStats(boomResults);
 
-                dom.loader.classList.remove('hidden'); dom.resultsContainer.classList.add('hidden'); dom.startButton.disabled = true;
+            dom.resultItemCount.textContent = itemCount;
+            dom.resultTargetLevel.textContent = targetLevel;
+            dom.mesoAvg.textContent = formatMeso(mesoStats.mean);
+            dom.mesoMedian.textContent = formatMeso(mesoStats.median);
+            dom.mesoStdev.textContent = formatMeso(mesoStats.stdev);
+            dom.mesoMin.textContent = formatMeso(mesoStats.min);
+            dom.mesoMax.textContent = formatMeso(mesoStats.max);
+            dom.mesoP75.textContent = t(
+              "p_chance_within",
+              formatMeso(mesoStats.p75)
+            );
+            dom.mesoP85.textContent = t(
+              "p_chance_within",
+              formatMeso(mesoStats.p85)
+            );
+            dom.mesoP95.textContent = t(
+              "p_chance_within",
+              formatMeso(mesoStats.p95)
+            );
 
-                setTimeout(() => {
-                    const mesoResults = [], boomResults = [];
-                    for (let i = 0; i < itemCount; i++) {
-                        const result = simulateOneItem(startLevel, targetLevel, options, currentData);
-                        if (result) { mesoResults.push(result.cost); boomResults.push(result.booms); }
-                    }
-                    const mesoStats = calculateStats(mesoResults); const boomStats = calculateStats(boomResults);
-                    
-                    dom.resultItemCount.textContent = itemCount; dom.resultTargetLevel.textContent = targetLevel;
-                    dom.mesoAvg.textContent = formatMeso(mesoStats.mean); dom.mesoMedian.textContent = formatMeso(mesoStats.median);
-                    dom.mesoStdev.textContent = formatMeso(mesoStats.stdev); dom.mesoMin.textContent = formatMeso(mesoStats.min);
-                    dom.mesoMax.textContent = formatMeso(mesoStats.max);
-                    dom.mesoP75.textContent = t('p_chance_within', formatMeso(mesoStats.p75));
-                    dom.mesoP85.textContent = t('p_chance_within', formatMeso(mesoStats.p85));
-                    dom.mesoP95.textContent = t('p_chance_within', formatMeso(mesoStats.p95));
-                    
-                    dom.boomAvg.textContent = boomStats.mean.toFixed(2); dom.boomMedian.textContent = boomStats.median.toFixed(2);
-                    dom.boomStdev.textContent = boomStats.stdev.toFixed(2); dom.boomMin.textContent = boomStats.min.toFixed(2);
-                    dom.boomMax.textContent = boomStats.max.toFixed(2);
-                    dom.boomP75.textContent = t('p_chance_within_booms', boomStats.p75.toFixed(0));
-                    dom.boomP85.textContent = t('p_chance_within_booms', boomStats.p85.toFixed(0));
-                    dom.boomP95.textContent = t('p_chance_within_booms', boomStats.p95.toFixed(0));
-                    
-                    renderBoomChart(boomResults);
-                    dom.loader.classList.add('hidden'); dom.resultsContainer.classList.remove('hidden'); dom.startButton.disabled = false;
-                }, 100);
-            }
+            dom.boomAvg.textContent = boomStats.mean.toFixed(2);
+            dom.boomMedian.textContent = boomStats.median.toFixed(2);
+            dom.boomStdev.textContent = boomStats.stdev.toFixed(2);
+            dom.boomMin.textContent = boomStats.min.toFixed(2);
+            dom.boomMax.textContent = boomStats.max.toFixed(2);
+            dom.boomP75.textContent = t(
+              "p_chance_within_booms",
+              boomStats.p75.toFixed(0)
+            );
+            dom.boomP85.textContent = t(
+              "p_chance_within_booms",
+              boomStats.p85.toFixed(0)
+            );
+            dom.boomP95.textContent = t(
+              "p_chance_within_booms",
+              boomStats.p95.toFixed(0)
+            );
 
-            function loadProfiles() {
-                const savedProfiles = localStorage.getItem('starForceProfiles');
-                if (savedProfiles) starForceProfiles = JSON.parse(savedProfiles);
-                else starForceProfiles = JSON.parse(JSON.stringify(defaultStarForceData));
-                updateProfileSelectors();
-                selectProfile(Object.keys(starForceProfiles)[0]);
+            renderBoomChart(boomResults);
+            dom.loader.classList.add("hidden");
+            dom.resultsContainer.classList.remove("hidden");
+            dom.startButton.disabled = false;
+          }, 100);
+        }
+
+        function loadProfiles() {
+          const savedProfiles = localStorage.getItem("starForceProfiles");
+          if (savedProfiles) starForceProfiles = JSON.parse(savedProfiles);
+          else
+            starForceProfiles = JSON.parse(
+              JSON.stringify(defaultStarForceData)
+            );
+          updateProfileSelectors();
+          selectProfile(Object.keys(starForceProfiles)[0]);
+        }
+        function saveProfiles() {
+          localStorage.setItem(
+            "starForceProfiles",
+            JSON.stringify(starForceProfiles)
+          );
+        }
+        function updateProfileSelectors(selectedName) {
+          const profileKeys = Object.keys(starForceProfiles);
+          [dom.mainProfileSelect, dom.settingsProfileSelect].forEach(
+            (select) => {
+              select.innerHTML = "";
+              profileKeys.forEach((key) => {
+                const option = document.createElement("option");
+                option.value = key;
+                option.textContent =
+                  translations[currentLang].profile_names[key] || key;
+                select.appendChild(option);
+              });
+              if (selectedName) select.value = selectedName;
             }
-            function saveProfiles() { localStorage.setItem('starForceProfiles', JSON.stringify(starForceProfiles)); }
-            function updateProfileSelectors(selectedName) {
-                const profileKeys = Object.keys(starForceProfiles);
-                [dom.mainProfileSelect, dom.settingsProfileSelect].forEach(select => {
-                    select.innerHTML = '';
-                    profileKeys.forEach(key => {
-                        const option = document.createElement('option');
-                        option.value = key; 
-                        option.textContent = translations[currentLang].profile_names[key] || key;
-                        select.appendChild(option);
-                    });
-                    if (selectedName) select.value = selectedName;
-                });
-                currentProfileName = selectedName || profileKeys[0]; updateMaxLevels();
-            }
-            function selectProfile(name) {
-                if (!starForceProfiles[name]) return;
-                currentProfileName = name;
-                [dom.mainProfileSelect, dom.settingsProfileSelect].forEach(s => s.value = name);
-                populateSettingsTable(starForceProfiles[name]); updateMaxLevels();
-            }
-            function updateMaxLevels() {
-                const maxLevel = starForceProfiles[currentProfileName]?.length || 25;
-                dom.startLevel.max = maxLevel - 1; dom.targetLevel.max = maxLevel;
-            }
-            function populateSettingsTable(data) {
-                dom.settingsTableBody.innerHTML = '';
-                data.forEach((d, i) => {
-                    const row = document.createElement('tr'); row.className = 'bg-gray-800 border-b border-gray-700';
-                    row.innerHTML = `
-                        <td class="px-4 py-2 font-medium text-white whitespace-nowrap">${i} → ${i + 1}</td>
-                        ${['success', 'maintain', 'downgrade', 'destroy', 'cost'].map(key => `
+          );
+          currentProfileName = selectedName || profileKeys[0];
+          updateMaxLevels();
+        }
+        function selectProfile(name) {
+          if (!starForceProfiles[name]) return;
+          currentProfileName = name;
+          [dom.mainProfileSelect, dom.settingsProfileSelect].forEach(
+            (s) => (s.value = name)
+          );
+          populateSettingsTable(starForceProfiles[name]);
+          updateMaxLevels();
+        }
+        function updateMaxLevels() {
+          const maxLevel = starForceProfiles[currentProfileName]?.length || 25;
+          dom.startLevel.max = maxLevel - 1;
+          dom.targetLevel.max = maxLevel;
+        }
+        function populateSettingsTable(data) {
+          dom.settingsTableBody.innerHTML = "";
+          data.forEach((d, i) => {
+            const row = document.createElement("tr");
+            row.className = "bg-gray-800 border-b border-gray-700";
+            row.innerHTML = `
+                        <td class="px-4 py-2 font-medium text-white whitespace-nowrap">${i} → ${
+              i + 1
+            }</td>
+                        ${[
+                          "success",
+                          "maintain",
+                          "downgrade",
+                          "destroy",
+                          "cost",
+                        ]
+                          .map(
+                            (key) => `
                             <td class="px-4 py-2"><input type="number" step="any" data-index="${i}" data-key="${key}" value="${d[key]}" class="input-field w-full p-1 rounded-md text-sm"></td>
-                        `).join('')}`;
-                    dom.settingsTableBody.appendChild(row);
-                });
-            }
-            function saveSettingsFromTable() {
-                const inputs = dom.settingsTableBody.querySelectorAll('input');
-                const newProfileData = []; const rowCount = starForceProfiles[currentProfileName].length;
-                for (let i = 0; i < rowCount; i++) {
-                    const rowData = {};
-                    inputs.forEach(input => { if (parseInt(input.dataset.index) === i) rowData[input.dataset.key] = parseFloat(input.value) || 0; });
-                    newProfileData.push(rowData);
-                }
-                starForceProfiles[currentProfileName] = newProfileData; saveProfiles();
-                alert(t('alert_saved', currentProfileName));
-            }
-            dom.openSettingsBtn.addEventListener('click', () => { dom.settingsModal.style.display = 'block'; });
-            dom.closeSettingsBtn.addEventListener('click', () => { dom.settingsModal.style.display = 'none'; });
-            dom.settingsProfileSelect.addEventListener('change', (e) => selectProfile(e.target.value));
-            dom.mainProfileSelect.addEventListener('change', (e) => selectProfile(e.target.value));
-            dom.saveSettingsBtn.addEventListener('click', saveSettingsFromTable);
-            dom.addProfileBtn.addEventListener('click', () => {
-                const newName = prompt(t('prompt_new_profile'), "Custom Profile");
-                if (newName && !starForceProfiles[newName]) {
-                    starForceProfiles[newName] = JSON.parse(JSON.stringify(starForceProfiles["Eternal (250)"]));
-                    saveProfiles(); updateProfileSelectors(newName); selectProfile(newName);
-                } else if (newName) { alert(t('alert_name_exists')); }
+                        `
+                          )
+                          .join("")}`;
+            dom.settingsTableBody.appendChild(row);
+          });
+        }
+        function saveSettingsFromTable() {
+          const inputs = dom.settingsTableBody.querySelectorAll("input");
+          const newProfileData = [];
+          const rowCount = starForceProfiles[currentProfileName].length;
+          for (let i = 0; i < rowCount; i++) {
+            const rowData = {};
+            inputs.forEach((input) => {
+              if (parseInt(input.dataset.index) === i)
+                rowData[input.dataset.key] = parseFloat(input.value) || 0;
             });
-            dom.deleteProfileBtn.addEventListener('click', () => {
-                if (Object.keys(starForceProfiles).length <= 1) { alert(t('alert_keep_one_profile')); return; }
-                if (confirm(t('confirm_delete', currentProfileName))) {
-                    delete starForceProfiles[currentProfileName]; saveProfiles(); loadProfiles();
-                }
-            });
-            dom.languageSwitcher.addEventListener('change', (e) => setLanguage(e.target.value));
-            window.onclick = (event) => { if (event.target == dom.settingsModal) { dom.settingsModal.style.display = "none"; } }
-            
-            // Initial Load
-            const savedLang = localStorage.getItem('starforce-lang') || 'zh-Hant';
-            dom.languageSwitcher.value = savedLang;
-            loadProfiles();
-            setLanguage(savedLang);
-            dom.startButton.addEventListener('click', startSimulation);
+            newProfileData.push(rowData);
+          }
+          starForceProfiles[currentProfileName] = newProfileData;
+          saveProfiles();
+          alert(t("alert_saved", currentProfileName));
+        }
+        dom.openSettingsBtn.addEventListener("click", () => {
+          dom.settingsModal.style.display = "block";
         });
+        dom.closeSettingsBtn.addEventListener("click", () => {
+          dom.settingsModal.style.display = "none";
+        });
+        dom.settingsProfileSelect.addEventListener("change", (e) =>
+          selectProfile(e.target.value)
+        );
+        dom.mainProfileSelect.addEventListener("change", (e) =>
+          selectProfile(e.target.value)
+        );
+        dom.saveSettingsBtn.addEventListener("click", saveSettingsFromTable);
+        dom.addProfileBtn.addEventListener("click", () => {
+          const newName = prompt(t("prompt_new_profile"), "Custom Profile");
+          if (newName && !starForceProfiles[newName]) {
+            starForceProfiles[newName] = JSON.parse(
+              JSON.stringify(starForceProfiles["Eternal (250)"])
+            );
+            saveProfiles();
+            updateProfileSelectors(newName);
+            selectProfile(newName);
+          } else if (newName) {
+            alert(t("alert_name_exists"));
+          }
+        });
+        dom.deleteProfileBtn.addEventListener("click", () => {
+          if (Object.keys(starForceProfiles).length <= 1) {
+            alert(t("alert_keep_one_profile"));
+            return;
+          }
+          if (confirm(t("confirm_delete", currentProfileName))) {
+            delete starForceProfiles[currentProfileName];
+            saveProfiles();
+            loadProfiles();
+          }
+        });
+        dom.languageSwitcher.addEventListener("change", (e) =>
+          setLanguage(e.target.value)
+        );
+        window.onclick = (event) => {
+          if (event.target == dom.settingsModal) {
+            dom.settingsModal.style.display = "none";
+          }
+        };
+
+        // Initial Load
+        const savedLang = localStorage.getItem("starforce-lang") || "zh-Hant";
+        dom.languageSwitcher.value = savedLang;
+        loadProfiles();
+        setLanguage(savedLang);
+        dom.startButton.addEventListener("click", startSimulation);
+      });
     </script>
-</body>
+  </body>
 </html>
