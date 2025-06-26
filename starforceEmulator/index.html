@@ -257,7 +257,7 @@
                       >防爆 (15-17星)</span
                     >
                     <p class="text-gray-400" data-i18n-key="safeguard_desc">
-                      啟用後，該次總費用變為 3 倍。
+                      啟用後，強化費用增加 200%，此增加部分不受折扣影響。
                     </p>
                   </div>
                 </label>
@@ -760,7 +760,7 @@
             item_count_label: "目標件數",
             permanent_features_title: "常駐功能",
             safeguard_title: "防爆 (15-17星)",
-            safeguard_desc: "啟用後，該次總費用變為 3 倍。",
+            safeguard_desc: "啟用後，強化費用增加 200%，此增加部分不受折扣影響。",
             events_title: "強化活動 (可複選)",
             event_30off_title: "強化費用 -30%",
             event_51015_title: "5/10/15 星 100% 成功",
@@ -832,7 +832,7 @@
             permanent_features_title: "Permanent Features",
             safeguard_title: "Safeguard (15-17 Star)",
             safeguard_desc:
-              "When enabled, total cost for the attempt becomes 3x.",
+              "When enabled, reinforcement cost increases +200%, and this increase is not applied to all kinds of discounts.",
             events_title: "Enhancement Events (Multi-select)",
             event_30off_title: "30% Off Star Force Cost",
             event_51015_title: "5/10/15 Star 100% Success",
@@ -906,7 +906,7 @@
             item_count_label: "목표 수량",
             permanent_features_title: "상시 기능",
             safeguard_title: "파괴 방지 (15-17성)",
-            safeguard_desc: "사용 시, 해당 강화 총비용이 3배가 됩니다.",
+            safeguard_desc: "사용 시, 강화 비용이 200% 증가하며, 이 증가분은 모든 할인에 적용되지 않습니다.",
             events_title: "강화 이벤트 (중복 선택 가능)",
             event_30off_title: "강화 비용 -30%",
             event_51015_title: "5/10/15성 100% 성공",
@@ -1045,19 +1045,51 @@
             let prob = { ...starForceData[currentStars] };
             let cost = prob.cost;
             
-            // VIP折扣計算 (適用於1-17星)
-            if (currentStars <= 16) { // 0-16對應1-17星
-              const vipDiscount = parseInt(options.vipRating) / 100;
-              cost *= (1.0 - vipDiscount);
+            // 檢查是否使用防爆 (防爆費用計算: 基礎費用 + 200%增加費用)
+            const useSafeguard =
+              options.useSafeguard && [15, 16, 17].includes(currentStars);
+            if (useSafeguard) {
+              prob.maintain += prob.destroy;
+              prob.destroy = 0;
+              // 防爆費用 = 折扣後的基礎費用 + 原始費用的200%(不受折扣影響)
+              let baseCost = cost;
+              
+              // 先計算基礎費用的折扣
+              // VIP折扣計算 (適用於1-17星)
+              if (currentStars <= 16) { // 0-16對應1-17星
+                const vipDiscount = parseInt(options.vipRating) / 100;
+                baseCost *= (1.0 - vipDiscount);
+              }
+              
+              // 星期日特殊折扣
+              if (options.sundayDiscount) {
+                baseCost *= 0.7;
+              }
+              
+              // 30%活動折扣
+              if (options.is30off) baseCost *= 0.7;
+              
+              // 最終防爆費用 = 折扣後基礎費用 + 原始費用的200%
+              cost = baseCost + (prob.cost * 2.0);
+            } else {
+              // 只有非防爆情況下才計算折扣
+              
+              // VIP折扣計算 (適用於1-17星)
+              if (currentStars <= 16) { // 0-16對應1-17星
+                const vipDiscount = parseInt(options.vipRating) / 100;
+                cost *= (1.0 - vipDiscount);
+              }
+              
+              // 星期日特殊折扣
+              if (options.sundayDiscount) {
+                cost *= 0.7;
+              }
+              
+              // 30%活動折扣
+              if (options.is30off) cost *= 0.7;
             }
             
-            // 星期日特殊折扣
-            if (options.sundayDiscount) {
-              cost *= 0.7;
-            }
-            
-            // 30%活動折扣
-            if (options.is30off) cost *= 0.7;
+            // 5/10/15星100%成功活動 (先處理，因為會直接成功)
             if (options.is5_10_15 && [5, 10, 15].includes(currentStars)) {
               totalCost += cost;
               currentStars++;
@@ -1072,13 +1104,6 @@
               prob.destroy -= reduction;
               prob.maintain += reduction;
             }
-            const useSafeguard =
-              options.useSafeguard && [15, 16, 17].includes(currentStars);
-            if (useSafeguard) {
-              prob.maintain += prob.destroy;
-              prob.destroy = 0;
-              cost *= 3;
-            }
             totalCost += cost;
             const rand = Math.random() * 100;
             if (rand < prob.success) currentStars++;
@@ -1086,6 +1111,8 @@
               totalBooms++;
               // 所有炸裝都回到12星
               currentStars = 12;
+            } else if (rand < prob.success + prob.destroy + prob.downgrade) {
+              currentStars--;
             }
           }
           return attempts >= MAX_ATTEMPTS
