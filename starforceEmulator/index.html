@@ -333,7 +333,11 @@
                     if (useSafeguard) { prob.maintain += prob.destroy; prob.destroy = 0; cost *= 3; }
                     totalCost += cost; const rand = Math.random() * 100;
                     if (rand < prob.success) currentStars++;
-                    else if (rand < prob.success + prob.destroy) { totalBooms++; currentStars = 12; }
+                    else if (rand < prob.success + prob.destroy) { 
+                        totalBooms++; 
+                        // 所有炸裝都回到12星
+                        currentStars = 12; 
+                    }
                     else if (rand < prob.success + prob.downgrade) currentStars = Math.max(0, currentStars - 1);
                 }
                 return attempts >= MAX_ATTEMPTS ? null : { cost: totalCost, booms: totalBooms };
