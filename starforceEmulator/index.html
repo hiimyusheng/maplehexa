@@ -268,6 +268,34 @@
           <div class="mt-6">
             <h3
               class="text-lg font-medium text-gray-300 mb-2"
+              data-i18n-key="vip_features_title"
+            >
+              VIP 折扣設定
+            </h3>
+            <div class="space-y-4">
+              <div>
+                <label
+                  for="vip-select"
+                  class="block text-sm font-medium text-gray-300"
+                  data-i18n-key="vip_select_label"
+                  >VIP 等級</label
+                >
+                <select
+                  id="vip-select"
+                  class="input-field mt-1 block w-full rounded-md shadow-sm p-2"
+                >
+                  <option value="0" data-i18n-key="vip_none">無 VIP (0%)</option>
+                  <option value="3" data-i18n-key="vip_gold">金牌 VIP (3%)</option>
+                  <option value="5" data-i18n-key="vip_diamond">鑽石 VIP (5%)</option>
+                  <option value="10" data-i18n-key="vip_royal">皇家 VIP (10%)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <h3
+              class="text-lg font-medium text-gray-300 mb-2"
               data-i18n-key="events_title"
             >
               強化活動 (可複選)
@@ -306,26 +334,47 @@
                     >5/10/15 星 100% 成功</span
                   >
                 </label>
-              </div>
-              <div class="checkbox-container">
-                <input
-                  id="event-destroy-protect"
-                  type="checkbox"
-                  class="checkbox-input"
-                />
-                <label for="event-destroy-protect" class="checkbox-label">
-                  <div class="checkbox-custom-box">
-                    <span class="checkmark">✓</span>
-                  </div>
-                  <div class="text-sm">
-                    <span
-                      class="font-medium text-white"
-                      data-i18n-key="event_destroy_protect_title"
-                      >破壞機率 -30% (15-21星)</span
-                    >
-                  </div>
-                </label>
-              </div>
+              </div>                <div class="checkbox-container">
+                  <input
+                    id="event-destroy-protect"
+                    type="checkbox"
+                    class="checkbox-input"
+                  />
+                  <label for="event-destroy-protect" class="checkbox-label">
+                    <div class="checkbox-custom-box">
+                      <span class="checkmark">✓</span>
+                    </div>
+                    <div class="text-sm">
+                      <span
+                        class="font-medium text-white"
+                        data-i18n-key="event_destroy_protect_title"
+                        >破壞機率 -30% (15-21星)</span
+                      >
+                    </div>
+                  </label>
+                </div>
+                <div class="checkbox-container">
+                  <input
+                    id="sunday-discount"
+                    type="checkbox"
+                    class="checkbox-input"
+                  />
+                  <label for="sunday-discount" class="checkbox-label">
+                    <div class="checkbox-custom-box">
+                      <span class="checkmark">✓</span>
+                    </div>
+                    <div class="text-sm">
+                      <span
+                        class="font-medium text-white"
+                        data-i18n-key="sunday_discount_title"
+                        >星期日特殊折扣 -30%</span
+                      >
+                      <p class="text-gray-400" data-i18n-key="sunday_discount_desc">
+                        與其他折扣疊加計算
+                      </p>
+                    </div>
+                  </label>
+                </div>
             </div>
           </div>
 
@@ -582,6 +631,8 @@
           event30off: document.getElementById("event-30off"),
           event51015: document.getElementById("event-5-10-15"),
           eventDestroyProtect: document.getElementById("event-destroy-protect"),
+          sundayDiscount: document.getElementById("sunday-discount"),
+          vipSelect: document.getElementById("vip-select"),
           startButton: document.getElementById("start-simulation"),
           loader: document.getElementById("loader"),
           resultsContainer: document.getElementById("results-container"),
@@ -714,6 +765,14 @@
             event_30off_title: "強化費用 -30%",
             event_51015_title: "5/10/15 星 100% 成功",
             event_destroy_protect_title: "破壞機率 -30% (15-21星)",
+            sunday_discount_title: "星期日特殊折扣 -30%",
+            sunday_discount_desc: "與其他折扣疊加計算",
+            vip_features_title: "VIP 折扣設定",
+            vip_select_label: "VIP 等級",
+            vip_none: "無 VIP (0%)",
+            vip_gold: "金牌 VIP (3%)",
+            vip_diamond: "鑽石 VIP (5%)",
+            vip_royal: "皇家 VIP (10%)",
             start_button: "開始模擬",
             loader_text: "正在進行大量模擬... 請稍候",
             results_title: "總體結果",
@@ -779,6 +838,14 @@
             event_51015_title: "5/10/15 Star 100% Success",
             event_destroy_protect_title:
               "30% Lower Destruction Rate (15-21 Star)",
+            sunday_discount_title: "Sunday Special Discount -30%",
+            sunday_discount_desc: "Stacks with other discounts",
+            vip_features_title: "VIP Discount Settings",
+            vip_select_label: "VIP Rating",
+            vip_none: "No VIP (0%)",
+            vip_gold: "Gold VIP (3%)",
+            vip_diamond: "Diamond VIP (5%)",
+            vip_royal: "Royal VIP (10%)",
             start_button: "Start Simulation",
             loader_text: "Running massive simulations... Please wait",
             results_title: "Overall Results",
@@ -844,6 +911,14 @@
             event_30off_title: "강화 비용 -30%",
             event_51015_title: "5/10/15성 100% 성공",
             event_destroy_protect_title: "파괴 확률 -30% (15-21성)",
+            sunday_discount_title: "일요일 특별 할인 -30%",
+            sunday_discount_desc: "다른 할인과 중복 적용",
+            vip_features_title: "VIP 할인 설정",
+            vip_select_label: "VIP 등급",
+            vip_none: "VIP 없음 (0%)",
+            vip_gold: "골드 VIP (3%)",
+            vip_diamond: "다이아몬드 VIP (5%)",
+            vip_royal: "로얄 VIP (10%)",
             start_button: "시뮬레이션 시작",
             loader_text: "대량 시뮬레이션 진행 중... 잠시만 기다려 주세요",
             results_title: "종합 결과",
@@ -969,6 +1044,19 @@
             attempts++;
             let prob = { ...starForceData[currentStars] };
             let cost = prob.cost;
+            
+            // VIP折扣計算 (適用於1-17星)
+            if (currentStars <= 16) { // 0-16對應1-17星
+              const vipDiscount = parseInt(options.vipRating) / 100;
+              cost *= (1.0 - vipDiscount);
+            }
+            
+            // 星期日特殊折扣
+            if (options.sundayDiscount) {
+              cost *= 0.7;
+            }
+            
+            // 30%活動折扣
             if (options.is30off) cost *= 0.7;
             if (options.is5_10_15 && [5, 10, 15].includes(currentStars)) {
               totalCost += cost;
@@ -998,8 +1086,7 @@
               totalBooms++;
               // 所有炸裝都回到12星
               currentStars = 12;
-            } else if (rand < prob.success + prob.downgrade)
-              currentStars = Math.max(0, currentStars - 1);
+            }
           }
           return attempts >= MAX_ATTEMPTS
             ? null
@@ -1076,6 +1163,8 @@
             is30off: dom.event30off.checked,
             is5_10_15: dom.event51015.checked,
             isDestroyProtect: dom.eventDestroyProtect.checked,
+            sundayDiscount: dom.sundayDiscount.checked,
+            vipRating: dom.vipSelect.value,
           };
           if (startLevel >= targetLevel) {
             alert(t("alert_target_level"));
