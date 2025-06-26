@@ -240,7 +240,37 @@
 
             let boomChartInstance = null; let starForceProfiles = {}; let currentProfileName = '';
             
-            const defaultProbabilities = [ { success: 95, maintain: 5, downgrade: 0, destroy: 0 }, { success: 90, maintain: 10, downgrade: 0, destroy: 0 }, { success: 85, maintain: 15, downgrade: 0, destroy: 0 }, { success: 85, maintain: 15, downgrade: 0, destroy: 0 }, { success: 80, maintain: 20, downgrade: 0, destroy: 0 }, { success: 75, maintain: 25, downgrade: 0, destroy: 0 }, { success: 70, maintain: 30, downgrade: 0, destroy: 0 }, { success: 65, maintain: 35, downgrade: 0, destroy: 0 }, { success: 60, maintain: 40, downgrade: 0, destroy: 0 }, { success: 55, maintain: 45, downgrade: 0, destroy: 0 }, { success: 50, maintain: 0, downgrade: 50, destroy: 0 }, { success: 45, maintain: 0, downgrade: 55, destroy: 0 }, { success: 40, maintain: 0, downgrade: 59.4, destroy: 0.6 }, { success: 35, maintain: 0, downgrade: 63.7, destroy: 1.3 }, { success: 30, maintain: 0, downgrade: 68.6, destroy: 1.4 }, { success: 30, maintain: 67.9, downgrade: 0, destroy: 2.1 }, { success: 30, maintain: 67.9, downgrade: 0, destroy: 2.1 }, { success: 15, maintain: 78.2, downgrade: 0, destroy: 6.8 }, { success: 12, maintain: 79.8, downgrade: 0, destroy: 8.2 }, { success: 10, maintain: 81, downgrade: 0, destroy: 9 }, { success: 30, maintain: 59.5, downgrade: 0, destroy: 10.5 }, { success: 20, maintain: 68.5, downgrade: 0, destroy: 11.5 }, { success: 17.5, maintain: 70.25, downgrade: 0, destroy: 12.25 }, { success: 10, maintain: 72, downgrade: 0, destroy: 18 }, { success: 10, maintain: 72, downgrade: 0, destroy: 18 }, { success: 10, maintain: 72, downgrade: 0, destroy: 18 }, { success: 7, maintain: 74.4, downgrade: 0, destroy: 18.6 }, { success: 5, maintain: 76, downgrade: 0, destroy: 19 }, { success: 3, maintain: 77.6, downgrade: 0, destroy: 19.4 }, { success: 1, maintain: 79.2, downgrade: 0, destroy: 19.8 } ];
+            const defaultProbabilities = [ 
+            { success: 95, maintain: 5, downgrade: 0, destroy: 0 },
+            { success: 90, maintain: 10, downgrade: 0, destroy: 0 }, 
+            { success: 85, maintain: 15, downgrade: 0, destroy: 0 }, 
+            { success: 85, maintain: 15, downgrade: 0, destroy: 0 }, 
+            { success: 80, maintain: 20, downgrade: 0, destroy: 0 }, 
+            { success: 75, maintain: 25, downgrade: 0, destroy: 0 }, 
+            { success: 70, maintain: 30, downgrade: 0, destroy: 0 }, 
+            { success: 65, maintain: 35, downgrade: 0, destroy: 0 }, 
+            { success: 60, maintain: 40, downgrade: 0, destroy: 0 }, 
+            { success: 55, maintain: 45, downgrade: 0, destroy: 0 }, 
+            { success: 50, maintain: 0, downgrade: 50, destroy: 0 }, 
+            { success: 45, maintain: 0, downgrade: 55, destroy: 0 }, 
+            { success: 40, maintain: 0, downgrade: 59.4, destroy: 0.6 }, 
+            { success: 35, maintain: 0, downgrade: 63.7, destroy: 1.3 }, 
+            { success: 30, maintain: 0, downgrade: 68.6, destroy: 1.4 }, 
+            { success: 30, maintain: 67.9, downgrade: 0, destroy: 2.1 }, 
+            { success: 30, maintain: 67.9, downgrade: 0, destroy: 2.1 }, 
+            { success: 15, maintain: 78.2, downgrade: 0, destroy: 6.8 }, 
+            { success: 12, maintain: 79.8, downgrade: 0, destroy: 8.2 }, 
+            { success: 10, maintain: 81, downgrade: 0, destroy: 9 }, 
+            { success: 30, maintain: 59.5, downgrade: 0, destroy: 10.5 }, 
+            { success: 20, maintain: 68.5, downgrade: 0, destroy: 11.5 }, 
+            { success: 17.5, maintain: 70.25, downgrade: 0, destroy: 12.25 }, 
+            { success: 8.5, maintain: 72, downgrade: 0, destroy: 18 }, 
+            { success: 8.5, maintain: 72, downgrade: 0, destroy: 18 }, 
+            { success: 8, maintain: 72, downgrade: 0, destroy: 18 }, 
+            { success: 7, maintain: 74.4, downgrade: 0, destroy: 18.6 }, 
+            { success: 5, maintain: 76, downgrade: 0, destroy: 19 }, 
+            { success: 3, maintain: 77.6, downgrade: 0, destroy: 19.4 }, 
+            { success: 1, maintain: 79.2, downgrade: 0, destroy: 19.8 } ];
             const costs = {
                 "Abyssal/Gollux (150)": [ 94800, 188500, 282300, 376000, 469800, 563500, 657300, 751000, 844800, 938500, 3832800, 8814200, 16052200, 26726100, 47243900, 48139000, 59062500, 75183500, 212666000, 366382500, 62696400, 113738800, 80152000, 89912300, 100389000, 111603000, 123574700, 136324400, 149872300, 164238100 ],
                 "Sweetwater (160)": [ 114800, 228600, 342300, 456100, 569900, 683700, 797400, 911200, 1025000, 1138800, 4651300, 10697000, 19481200, 32435400, 57336400, 58422700, 71679800, 91244700, 258097500, 444652400, 76090000, 138036600, 97274600, 109120000, 121834900, 135444400, 149973700, 165447100, 181889200, 199324000 ],
