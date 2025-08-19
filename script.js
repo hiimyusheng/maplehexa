@@ -162,17 +162,14 @@ function go() {
   var com1_consume = parseInt($("#common1_consume").html());
   let havePieces = parseInt(document.getElementById("havePieces").value);
   havePieces = isNaN(havePieces) ? 0 : havePieces;
+  let jn_consume = jn1_consume + jn2_consume + jn3_consume + jn4_consume;
+  let stn_consume = stn1_consume + stn2_consume + stn3_consume + stn4_consume;
+  let com_consume = com1_consume;
   var alln1 =
     s_consume +
-    jn1_consume +
-    jn2_consume +
-    jn3_consume +
-    jn4_consume +
-    stn1_consume +
-    stn2_consume +
-    stn3_consume +
-    stn4_consume +
-    com1_consume +
+    jn_consume +
+    stn_consume +
+    com_consume +
     havePieces;
   document.getElementById("all").innerHTML = alln1;
   var s_request = parseInt($("#skill1_request").html());
@@ -201,8 +198,13 @@ function go() {
   var x;
   x = alln1 / 332.08;
   document.getElementById("ooo1").innerHTML = x.toFixed(2) + "%";
+  var y;
+  y = (alln1 - com_consume) / 269.40;
+  document.getElementById("ppp1").innerHTML = y.toFixed(2) + "%";
   var vvv2 = document.getElementById("vvv");
   vvv2.setAttribute("value", alln1);
+  var xxx2 = document.getElementById("xxx");
+  xxx2.setAttribute("value", (alln1 - com_consume));
 
   if (alln1 > 1) {
     document.getElementById("no1").innerHTML =
