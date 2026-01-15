@@ -1,6 +1,7 @@
 // 建立更新圖表的函數，讓它可以被多次呼叫
 function updateChart(
   skill1_consume,
+  skill2_consume,
   jinton1_consume,
   jinton2_consume,
   jinton3_consume,
@@ -25,8 +26,9 @@ function updateChart(
 
   // 計算剩餘碎片數
   let not_enough =
-    33208 -
+    37608 -
     skill1_consume -
+    skill2_consume -
     jinton1_consume -
     jinton2_consume -
     jinton3_consume -
@@ -49,6 +51,7 @@ function updateChart(
   // 設定圖表資料
   chart.data$.next([
     [{ label: "技能核心1", value: skill1_consume }],
+    [{ label: "技能核心2", value: skill2_consume }],
     [{ label: "精通核心1", value: jinton1_consume }],
     [{ label: "精通核心2", value: jinton2_consume }],
     [{ label: "精通核心3", value: jinton3_consume }],
@@ -75,6 +78,7 @@ function updateChart(
           "#004B97",
           "#003D79",
           "#003060",
+          "#011c38",
           "#FF2D2D",
         ],
       },

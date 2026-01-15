@@ -1,5 +1,6 @@
 function go() {
   var skilv = document.getElementById("skill1_level").value;
+  var skill2lv = document.getElementById("skill2_level").value;
   var jin1lv = document.getElementById("jinton1_level").value;
   var jin2lv = document.getElementById("jinton2_level").value;
   var jin3lv = document.getElementById("jinton3_level").value;
@@ -23,6 +24,19 @@ function go() {
   }
   document.getElementById("skill1_consume").innerHTML = skill1_consume;
   document.getElementById("skill1_request").innerHTML = 4400 - skill1_consume;
+
+  if (isNaN(skilv)) {
+    skilv = 0;
+  }
+  if (skilv >= 30) {
+    skilv = 30;
+  }
+  let skill2_consume = 0;
+  for (let i = 0; i < skill2lv; i++) {
+    skill2_consume += skillArray[i];
+  }
+  document.getElementById("skill2_consume").innerHTML = skill2_consume;
+  document.getElementById("skill2_request").innerHTML = 4400 - skill2_consume;
 
   // 精通核心1
   if (isNaN(jin1lv)) {
@@ -151,6 +165,7 @@ function go() {
   document.getElementById("common1_request").innerHTML = 6268 - common1_consume;
 
   var s_consume = parseInt($("#skill1_consume").html());
+  var s2_consume = parseInt($("#skill2_consume").html());
   var jn1_consume = parseInt($("#jinton1_consume").html());
   var jn2_consume = parseInt($("#jinton2_consume").html());
   var jn3_consume = parseInt($("#jinton3_consume").html());
@@ -162,17 +177,19 @@ function go() {
   var com1_consume = parseInt($("#common1_consume").html());
   let havePieces = parseInt(document.getElementById("havePieces").value);
   havePieces = isNaN(havePieces) ? 0 : havePieces;
+  let s_consume_total = s_consume + s2_consume;
   let jn_consume = jn1_consume + jn2_consume + jn3_consume + jn4_consume;
   let stn_consume = stn1_consume + stn2_consume + stn3_consume + stn4_consume;
   let com_consume = com1_consume;
   var alln1 =
-    s_consume +
+    s_consume_total +
     jn_consume +
     stn_consume +
     com_consume +
     havePieces;
   document.getElementById("all").innerHTML = alln1;
   var s_request = parseInt($("#skill1_request").html());
+  var s2_request = parseInt($("#skill2_request").html());
   var jn1_request = parseInt($("#jinton1_request").html());
   var jn2_request = parseInt($("#jinton1_request").html());
   var jn3_request = parseInt($("#jinton3_request").html());
@@ -184,6 +201,7 @@ function go() {
   var com1_request = parseInt($("#common1_request").html());
   var alln2 =
     s_request +
+    s2_request +
     jn1_request +
     jn2_request +
     jn3_request +
@@ -196,10 +214,10 @@ function go() {
     havePieces;
   document.getElementById("all2").innerHTML = alln2;
   var x;
-  x = alln1 / 332.08;
+  x = alln1 / 376.08;
   document.getElementById("ooo1").innerHTML = x.toFixed(2) + "%";
   var y;
-  y = (alln1 - com_consume) / 269.40;
+  y = (alln1 - com_consume) / 313.40;
   document.getElementById("ppp1").innerHTML = y.toFixed(2) + "%";
   var vvv2 = document.getElementById("vvv");
   vvv2.setAttribute("value", alln1);
@@ -252,7 +270,7 @@ function go() {
   if (alln1 > 10000) {
     document.getElementById("no1").innerHTML = "說謊的孩子沒人要";
   }
-  if (alln1 == 33208) {
+  if (alln1 == 37608) {
     document.getElementById("no1").innerHTML = "誇大了吧臭宅。";
   }
   document.getElementById("no2").style.display = "inline-block";
@@ -261,6 +279,7 @@ function go() {
   if (window.updateChart) {
     window.updateChart(
       s_consume,
+      s2_consume,
       jn1_consume,
       jn2_consume,
       jn3_consume,
