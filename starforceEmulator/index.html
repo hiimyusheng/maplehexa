@@ -31,6 +31,25 @@
       .btn-primary:hover:not(:disabled) {
         background-color: #6366f1;
       }
+      .nav-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1rem;
+        border-radius: 9999px;
+        border: 1px solid #4b5563;
+        background-color: rgba(31, 41, 55, 0.92);
+        color: #c7d2fe;
+        font-size: 0.875rem;
+        text-decoration: none;
+        transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+      }
+      .nav-link:hover {
+        border-color: #6366f1;
+        background-color: rgba(79, 70, 229, 0.14);
+        color: #e0e7ff;
+      }
       .btn-primary:disabled {
         opacity: 0.5;
         cursor: not-allowed;
@@ -135,14 +154,19 @@
   </head>
   <body class="p-4 md:p-8">
     <div class="max-w-6xl mx-auto">
-      <header class="text-center mb-8 relative">
-        <h1 class="text-4xl font-bold text-yellow-300" data-i18n-key="title">
-          新楓之谷 星力模擬器
-        </h1>
-        <p class="text-gray-400 mt-2" data-i18n-key="subtitle">
-          精準計算您的強化成本與風險
-        </p>
-        <div class="absolute top-0 right-0 flex items-center gap-2">
+      <header class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div class="text-center lg:text-left lg:flex-1">
+          <h1 class="text-4xl font-bold text-yellow-300" data-i18n-key="title">
+            新楓之谷 星力模擬器
+          </h1>
+          <p class="text-gray-400 mt-2" data-i18n-key="subtitle">
+            精準計算您的強化成本與風險
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center justify-center lg:justify-end gap-2">
+          <a href="../" class="nav-link" data-i18n-key="back_to_tools">
+            返回工具箱
+          </a>
           <select
             id="language-switcher"
             class="input-field rounded-md p-2 text-sm"

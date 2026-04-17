@@ -97,5 +97,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+.vscode/
+.claude/
+CLAUDE.MD
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,windows,vuejs,vue

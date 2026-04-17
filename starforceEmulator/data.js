@@ -83,6 +83,7 @@
     "zh-Hant": {
       title: "新楓之谷 星力模擬器",
       subtitle: "精準計算您的強化成本與風險",
+      back_to_tools: "返回工具箱",
       settings: "自訂設定",
       sim_settings_title: "模擬設定",
       profile_select_label: "選擇裝備設定",
@@ -158,6 +159,7 @@
     en: {
       title: "MapleStory Star Force Simulator",
       subtitle: "Calculate your enhancement costs and risks accurately",
+      back_to_tools: "Back to Toolbox",
       settings: "Custom Settings",
       sim_settings_title: "Simulation Settings",
       profile_select_label: "Select Equipment Profile",
@@ -238,6 +240,7 @@
     ko: {
       title: "메이플스토리 스타포스 시뮬레이터",
       subtitle: "강화 비용과 리스크를 정확하게 계산하세요",
+      back_to_tools: "도구함으로 돌아가기",
       settings: "커스텀 설정",
       sim_settings_title: "시뮬레이션 설정",
       profile_select_label: "장비 프리셋 선택",

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>六轉核心計算器</title>
+    <title>新楓之谷工具箱</title>
     <link rel="icon" href="images/hexa.webp" type="image/x-icon" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -11,224 +11,148 @@
       rel="stylesheet"
     />
     <style>
+      :root {
+        --bg-primary: #111827;
+        --bg-secondary: #1f2937;
+        --border: #374151;
+        --text-muted: #9ca3af;
+        --accent: #6366f1;
+        --accent-soft: rgba(99, 102, 241, 0.18);
+        --gold: #fcd34d;
+      }
       body {
         font-family: "Noto Sans TC", sans-serif;
-        background-color: #111827;
+        background:
+          radial-gradient(circle at top, rgba(99, 102, 241, 0.22), transparent 36%),
+          radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.14), transparent 26%),
+          var(--bg-primary);
         color: #e2e8f0;
       }
-      .card {
-        background-color: #1f2937;
-        border: 1px solid #374151;
+      .hero-panel {
+        background: linear-gradient(180deg, rgba(31, 41, 55, 0.88), rgba(17, 24, 39, 0.94));
+        border: 1px solid rgba(99, 102, 241, 0.18);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+        backdrop-filter: blur(12px);
       }
-      .input-field {
-        background-color: #111827;
-        border: 1px solid #4b5563;
-        color: #f9fafb;
-        transition: border-color 0.15s, box-shadow 0.15s;
-      }
-      .input-field:focus {
-        outline: none;
-        border-color: #6366f1;
-        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
-      }
-      .input-field::placeholder {
-        color: #6b7280;
-      }
-      .btn-primary {
-        background-color: #4f46e5;
-        transition: background-color 0.15s, transform 0.05s;
-      }
-      .btn-primary:hover {
-        background-color: #6366f1;
-      }
-      .btn-primary:active {
-        transform: translateY(1px);
-      }
-      progress {
-        appearance: none;
-        -webkit-appearance: none;
-        width: 100%;
-        height: 14px;
-        border: none;
-        border-radius: 9999px;
+      .tool-card {
+        background:
+          linear-gradient(180deg, rgba(31, 41, 55, 0.98), rgba(17, 24, 39, 0.98));
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        text-decoration: none;
+        display: block;
+        position: relative;
         overflow: hidden;
-        background-color: #374151;
       }
-      progress::-webkit-progress-bar {
-        background-color: #374151;
-        border-radius: 9999px;
+      .tool-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent), var(--gold));
+        opacity: 0.9;
       }
-      progress::-webkit-progress-value {
-        background: linear-gradient(90deg, #6366f1, #a855f7);
-        border-radius: 9999px;
-        transition: width 0.3s ease;
+      .tool-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-4px);
+        box-shadow: 0 16px 44px var(--accent-soft);
       }
-      progress::-moz-progress-bar {
-        background: linear-gradient(90deg, #6366f1, #a855f7);
-        border-radius: 9999px;
+      .tool-card:active {
+        transform: translateY(-1px);
       }
-      /* hide native number spinners — keeps the UI tidy */
-      input[type="number"]::-webkit-outer-spin-button,
-      input[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
+      .tool-arrow {
+        color: #c7d2fe;
+        transition: transform 0.2s ease;
       }
-      input[type="number"] {
-        -moz-appearance: textfield;
+      .tool-card:hover .tool-arrow {
+        transform: translateX(4px);
       }
     </style>
   </head>
-  <body class="min-h-screen">
-    <div class="max-w-6xl mx-auto px-4 py-8">
-      <header class="text-center mb-8">
-        <h1
-          class="text-3xl sm:text-4xl font-bold text-yellow-300 flex items-center justify-center gap-3"
-        >
-          <img src="images/hexa.webp" alt="hexa" class="w-9 h-9" />
-          六轉核心計算器
-        </h1>
-        <p class="text-gray-400 mt-2 text-sm sm:text-base">
-          精算滿等所需碎片數、目前進度與核心分布
-        </p>
-      </header>
-
-      <main class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <section class="card rounded-lg p-6">
-          <h2
-            class="text-lg font-semibold text-yellow-300 border-b border-gray-700 pb-2 mb-4"
-          >
-            技能核心
-          </h2>
-          <div id="cores-skill" class="space-y-4"></div>
-        </section>
-
-        <section class="card rounded-lg p-6">
-          <h2
-            class="text-lg font-semibold text-yellow-300 border-b border-gray-700 pb-2 mb-4"
-          >
-            精通核心
-          </h2>
-          <div id="cores-mastery" class="space-y-4"></div>
-        </section>
-
-        <section class="card rounded-lg p-6">
-          <h2
-            class="text-lg font-semibold text-yellow-300 border-b border-gray-700 pb-2 mb-4"
-          >
-            強化核心
-          </h2>
-          <div id="cores-enhance" class="space-y-4"></div>
-        </section>
-
-        <section class="card rounded-lg p-6">
-          <h2
-            class="text-lg font-semibold text-yellow-300 border-b border-gray-700 pb-2 mb-4"
-          >
-            共通核心
-          </h2>
-          <div id="cores-common" class="space-y-4"></div>
-        </section>
-      </main>
-
-      <div
-        class="card rounded-lg p-6 mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4"
-      >
-        <div class="flex items-center gap-3 flex-1">
-          <label
-            for="havePieces"
-            class="text-gray-200 whitespace-nowrap font-medium"
-            >尚持有碎片</label
-          >
-          <input
-            id="havePieces"
-            type="number"
-            min="0"
-            placeholder="0"
-            class="input-field rounded-md px-3 py-2 flex-1"
+  <body class="min-h-screen flex flex-col">
+    <div class="flex-1 flex flex-col items-center justify-center px-6 py-16">
+      <section class="hero-panel rounded-3xl w-full max-w-5xl px-6 py-10 sm:px-10 sm:py-12">
+        <header class="text-center max-w-2xl mx-auto mb-12">
+          <img
+            src="images/hexa.webp"
+            alt="hexa"
+            class="w-16 h-16 mx-auto mb-5"
           />
-        </div>
-        <button
-          onclick="go()"
-          class="btn-primary rounded-md px-8 py-2.5 font-semibold text-white sm:w-auto"
-        >
-          計算
-        </button>
-      </div>
+          <h1 class="text-4xl sm:text-5xl font-bold text-yellow-300 tracking-tight">
+            新楓之谷工具箱
+          </h1>
+        </header>
 
-      <section id="results" class="card rounded-lg p-6 mt-6 space-y-6">
-        <h2
-          class="text-lg font-semibold text-yellow-300 border-b border-gray-700 pb-2"
-        >
-          進度總覽
-        </h2>
+        <main class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+          <a href="hexaCalculator/" class="tool-card p-8 text-center sm:text-left">
+            <div class="flex justify-center sm:justify-start mb-5">
+              <div class="rounded-2xl bg-indigo-500/10 border border-indigo-400/20 p-4">
+                <svg
+                  class="w-14 h-14 text-indigo-400"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
+                  />
+                </svg>
+              </div>
+            </div>
+            <p class="text-xs uppercase tracking-[0.3em] text-indigo-300 mb-3">
+              HEXA Core
+            </p>
+            <h2 class="text-2xl font-bold text-yellow-300 mb-3">
+              六轉核心計算器
+            </h2>
+            <div class="mt-6 flex items-center justify-center sm:justify-start gap-2 text-indigo-200 font-medium">
+              <span>進入工具</span>
+              <span class="tool-arrow">→</span>
+            </div>
+          </a>
 
-        <div>
-          <div class="flex items-baseline justify-between mb-2">
-            <span class="text-sm text-gray-300">碎片進度</span>
-            <span class="text-sm"
-              ><span id="ooo1" class="text-yellow-300 font-semibold">0.00%</span
-              ><span id="ooo2"></span
-            ></span>
-          </div>
-          <progress max="37608" value="0" id="vvv"></progress>
-        </div>
-
-        <div>
-          <div class="flex items-baseline justify-between mb-2">
-            <span class="text-sm text-gray-300">不含共通技能碎片進度</span>
-            <span class="text-sm"
-              ><span id="ppp1" class="text-yellow-300 font-semibold">0.00%</span
-              ><span id="ppp2"></span
-            ></span>
-          </div>
-          <progress max="26940" value="0" id="xxx"></progress>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="bg-gray-900 border border-gray-700 rounded-md p-4">
-            <div class="text-gray-400 text-sm mb-1">獲取碎片數量</div>
-            <div id="all" class="text-2xl font-bold text-white">-</div>
-          </div>
-          <div class="bg-gray-900 border border-gray-700 rounded-md p-4">
-            <div class="text-gray-400 text-sm mb-1">還需碎片數量</div>
-            <div id="all2" class="text-2xl font-bold text-white">-</div>
-          </div>
-        </div>
-
-        <div
-          id="no1"
-          class="text-center text-base sm:text-lg text-pink-300 italic min-h-6"
-        ></div>
-
-        <div id="chart" class="w-full" style="min-height: 320px"></div>
+          <a href="starforceEmulator/" class="tool-card p-8 text-center sm:text-left">
+            <div class="flex justify-center sm:justify-start mb-5">
+              <div class="rounded-2xl bg-amber-400/10 border border-amber-300/20 p-4">
+                <svg
+                  class="w-14 h-14 text-yellow-400"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <p class="text-xs uppercase tracking-[0.3em] text-yellow-200 mb-3">
+              Star Force
+            </p>
+            <h2 class="text-2xl font-bold text-yellow-300 mb-3">星力模擬器</h2>
+            <div class="mt-6 flex items-center justify-center sm:justify-start gap-2 text-yellow-100 font-medium">
+              <span>進入工具</span>
+              <span class="tool-arrow">→</span>
+            </div>
+          </a>
+        </main>
       </section>
-
-      <footer
-        class="text-center mt-8 mb-4 text-xs sm:text-sm text-gray-500 flex flex-wrap items-center justify-center gap-x-3 gap-y-1"
-      >
-        <span id="no2" style="display: none"
-          ><a
-            class="hover:text-indigo-400 transition-colors"
-            href="https://home.gamer.com.tw/homeindex.php?owner=super789x"
-            >惡魔品質</a
-          >
-          製作</span
-        >
-        <span class="text-gray-700" aria-hidden="true">·</span>
-        <span id="no3" style="display: none"
-          ><a
-            class="hover:text-indigo-400 transition-colors"
-            href="https://home.gamer.com.tw/homeindex.php?owner=bighta83330"
-            >歪歪</a
-          >
-          修改 20250331</span
-        >
-      </footer>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/orbcharts@3.0.8/dist/orbcharts.umd.min.js"></script>
-    <script src="script.js"></script>
-    <script src="chart.js"></script>
+    <footer class="text-center pb-8 text-xs text-gray-600">
+      <a
+        href="https://home.gamer.com.tw/homeindex.php?owner=bighta83330"
+        class="hover:text-indigo-400 transition-colors"
+        >歪歪</a
+      >
+      製作
+    </footer>
   </body>
 </html>
