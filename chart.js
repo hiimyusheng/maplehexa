@@ -48,21 +48,41 @@ function updateChart(
     new window.orbcharts.SeriesTooltip(),
   ]);
 
+  const seriesLabels = [
+    "技能核心1",
+    "技能核心2",
+    "精通核心1",
+    "精通核心2",
+    "精通核心3",
+    "精通核心4",
+    "強化核心1",
+    "強化核心2",
+    "強化核心3",
+    "強化核心4",
+    "共通核心1",
+    "碎片不足",
+  ];
+  const seriesValues = [
+    skill1_consume,
+    skill2_consume,
+    jinton1_consume,
+    jinton2_consume,
+    jinton3_consume,
+    jinton4_consume,
+    strong1_consume,
+    strong2_consume,
+    strong3_consume,
+    strong4_consume,
+    common1_consume,
+    not_enough,
+  ];
+
   // 設定圖表資料
-  chart.data$.next([
-    [{ label: "技能核心1", value: skill1_consume }],
-    [{ label: "技能核心2", value: skill2_consume }],
-    [{ label: "精通核心1", value: jinton1_consume }],
-    [{ label: "精通核心2", value: jinton2_consume }],
-    [{ label: "精通核心3", value: jinton3_consume }],
-    [{ label: "精通核心4", value: jinton4_consume }],
-    [{ label: "強化核心1", value: strong1_consume }],
-    [{ label: "強化核心2", value: strong2_consume }],
-    [{ label: "強化核心3", value: strong3_consume }],
-    [{ label: "強化核心4", value: strong4_consume }],
-    [{ label: "共通核心1", value: common1_consume }],
-    [{ label: "碎片不足", value: not_enough }],
-  ]);
+  chart.data$.next(
+    seriesLabels.map((label, i) => [{ label, value: seriesValues[i] }])
+  );
+  // SeriesLegend 預設會顯示 series1/series2...，要改顯示 label 需指定 seriesLabels
+  chart.dataFormatter$.next({ seriesLabels });
   chart.chartParams$.next({
     colorScheme: "light",
     colors: {
@@ -81,6 +101,10 @@ function updateChart(
           "#011c38",
           "#FF2D2D",
         ],
+        // 深色背景下的文字色 (legend / PieLabels / tooltip 都讀 primary)
+        primary: "#e5e7eb",
+        secondary: "#374151",
+        background: "#111827",
       },
     },
   });
